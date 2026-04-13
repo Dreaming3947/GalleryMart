@@ -1,0 +1,31 @@
+package com.gallerymart.backend.config;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
+/**
+ * Standard API response wrapper used by all controllers.
+ * Format: { "success": true/false, "message": "...", "data": {} }
+ */
+@Data
+@Builder
+@AllArgsConstructor
+public class ApiResponse<T> {
+
+    private boolean success;
+    private String message;
+    private T data;
+
+    public static <T> ApiResponse<T> success(T data) {
+        return new ApiResponse<>(true, null, data);
+    }
+
+    public static <T> ApiResponse<T> success(String message, T data) {
+        return new ApiResponse<>(true, message, data);
+    }
+
+    public static <T> ApiResponse<T> error(String message) {
+        return new ApiResponse<>(false, message, null);
+    }
+}
