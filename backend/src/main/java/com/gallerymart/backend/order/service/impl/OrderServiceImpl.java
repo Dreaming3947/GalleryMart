@@ -8,6 +8,7 @@ import com.gallerymart.backend.entity.enums.OrderStatus;
 import com.gallerymart.backend.exception.ForbiddenException;
 import com.gallerymart.backend.exception.InvalidInputException;
 import com.gallerymart.backend.exception.ResourceNotFoundException;
+import com.gallerymart.backend.notification.service.NotificationService;
 import com.gallerymart.backend.order.dto.request.OrderCreateRequest;
 import com.gallerymart.backend.order.dto.response.OrderResponse;
 import com.gallerymart.backend.order.service.OrderService;
@@ -28,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ArtworkRepository artworkRepository;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -93,7 +95,9 @@ public class OrderServiceImpl implements OrderService {
         artwork.setStatus(ArtworkStatus.SOLD);
 
         artworkRepository.save(artwork);
-        return mapToResponse(orderRepository.save(order));
+        Order savedOrder = orderRepository.save(order);
+        notificationService.createOrderStatusNotification(savedOrder);
+        return mapToResponse(savedOrder);
     }
 
     @Override
@@ -109,7 +113,9 @@ public class OrderServiceImpl implements OrderService {
         artwork.setStatus(ArtworkStatus.AVAILABLE);
 
         artworkRepository.save(artwork);
-        return mapToResponse(orderRepository.save(order));
+        Order savedOrder = orderRepository.save(order);
+        notificationService.createOrderStatusNotification(savedOrder);
+        return mapToResponse(savedOrder);
     }
 
     @Override
