@@ -108,6 +108,8 @@ Authorization: Bearer <access_token>
 - `POST /api/auth/register` (public)
 - `POST /api/auth/login` (public)
 - `GET /api/auth/me` (authenticated)
+- `PATCH /api/auth/me` (authenticated, update fullName/avatarUrl)
+- `POST /api/auth/me/enable-seller` (authenticated, add SELLER role to current account)
 
 ### 7.2 Artworks
 
@@ -182,3 +184,34 @@ mvn test
 - Them OpenAPI (springdoc) cho API docs.
 - Them rate limit cho auth endpoints.
 - Them CI pipeline chay `mvn test` tren pull request.
+
+## 11. Android Team Onboarding
+
+- Folder structure guide cho team Android: [docs/android-folder-structure.md](docs/android-folder-structure.md)
+
+## 12. Frontend Work Split (5 parts, in order)
+
+1. Auth + Session + Navigation Base
+- Scope: login/register, luu token, auto redirect khi token het han, nav graph theo trang thai dang nhap.
+- APIs: `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`.
+- Output: app mo len vao dung luong (auth flow hoac main flow).
+
+2. Buyer Feed + Product Detail
+- Scope: danh sach tranh available, pagination, man chi tiet tranh.
+- APIs: `GET /api/artworks`, `GET /api/artworks/{id}`.
+- Output: user xem va chon tranh de mua.
+
+3. Buyer Checkout + Order Tracking
+- Scope: mua ngay, danh dau da chuyen khoan, theo doi danh sach va chi tiet don.
+- APIs: `POST /api/orders`, `PATCH /api/orders/{id}/payment-sent`, `GET /api/orders/my`, `GET /api/orders/{id}`.
+- Output: buyer hoan tat luong mua hang co theo doi trang thai.
+
+4. Seller Listing + Inventory Management
+- Scope: bat role seller, dang ban tranh, sua/xoa tranh cua minh.
+- APIs: `POST /api/auth/me/enable-seller`, `GET /api/artworks/my`, `POST /api/artworks`, `PUT /api/artworks/{id}`, `DELETE /api/artworks/{id}`.
+- Output: seller quan ly duoc danh sach tranh dang ban.
+
+5. Seller Order Handling + Notifications + Shared UI
+- Scope: xu ly don hang nguoi ban (confirm/cancel), thong bao va mark read-all, dong bo component dung chung.
+- APIs: `GET /api/orders/sales`, `PATCH /api/orders/{id}/confirm`, `PATCH /api/orders/{id}/cancel`, `GET /api/notifications`, `PATCH /api/notifications/read-all`.
+- Output: seller dong duoc luong xu ly don; app co bo component UI nhat quan.

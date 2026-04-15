@@ -2,7 +2,9 @@ package com.gallerymart.backend.unit;
 
 import com.gallerymart.backend.auth.dto.request.LoginRequest;
 import com.gallerymart.backend.auth.dto.request.RegisterRequest;
+import com.gallerymart.backend.auth.dto.request.UpdateProfileRequest;
 import com.gallerymart.backend.auth.dto.response.AuthResponse;
+import com.gallerymart.backend.auth.dto.response.UserProfileResponse;
 import com.gallerymart.backend.auth.service.AuthService;
 import com.gallerymart.backend.auth.service.JwtService;
 import com.gallerymart.backend.entity.User;
@@ -128,4 +130,47 @@ class AuthServiceUnitTest {
         assertThat(response.getUser().getId()).isEqualTo(2L);
         assertThat(response.getUser().getEmail()).isEqualTo("login@test.com");
     }
+
+        @Test
+        void should_update_profile_for_current_user() {
+                User existingUser = User.builder()
+                                .id(10L)
+                                .email("profile@test.com")
+                                .fullName("Old Name")
+                                .avatarUrl(null)
+                                .roles("BUYER")
+                                .password("encoded")
+                                .build();
+
+                UpdateProfileRequest request = UpdateProfileRequest.builder()
+                                .fullName("  New Name  ")
+                                .avatarUrl(" https://img.test/new.png ")
+                                .build();
+
+                when(userRepository.findByEmail("profile@test.com")).thenReturn(Optional.of(existingUser));
+                when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+                UserProfileResponse response = authService.updateProfile("profile@test.com", request);
+
+                assertThat(response.getFullName()).isEqualTo("New Name");
+                assertThat(response.getAvatarUrl()).isEqualTo("https://img.test/new.png");
+        }
+
+        @Test
+        void should_enable_seller_role_for_current_user() {
+                User existingUser = User.builder()
+                                .id(11L)
+                                .email("buyer@test.com")
+                                .fullName("Buyer")
+                                .roles("BUYER")
+                                .password("encoded")
+                                .build();
+
+                when(userRepository.findByEmail("buyer@test.com")).thenReturn(Optional.of(existingUser));
+                when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+                UserProfileResponse response = authService.enableSellerRole("buyer@test.com");
+
+                assertThat(response.getRoles()).isEqualTo("BUYER,SELLER");
+        }
 }

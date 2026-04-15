@@ -2,6 +2,7 @@ package com.gallerymart.backend.auth.service;
 
 import com.gallerymart.backend.auth.dto.request.LoginRequest;
 import com.gallerymart.backend.auth.dto.request.RegisterRequest;
+import com.gallerymart.backend.auth.dto.request.UpdateProfileRequest;
 import com.gallerymart.backend.auth.dto.response.AuthResponse;
 import com.gallerymart.backend.auth.dto.response.UserProfileResponse;
 import com.gallerymart.backend.entity.User;
@@ -77,6 +78,26 @@ public class AuthService {
         return toProfile(user);
     }
 
+    @Transactional
+    public UserProfileResponse updateProfile(String email, UpdateProfileRequest request) {
+        User user = userRepository.findByEmail(normalizeEmail(email))
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        user.setFullName(request.getFullName().trim());
+        user.setAvatarUrl(trimToNull(request.getAvatarUrl()));
+
+        return toProfile(userRepository.save(user));
+    }
+
+    @Transactional
+    public UserProfileResponse enableSellerRole(String email) {
+        User user = userRepository.findByEmail(normalizeEmail(email))
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        user.addRole("SELLER");
+        return toProfile(userRepository.save(user));
+    }
+
     private AuthResponse buildAuthResponse(User user, String token) {
         return AuthResponse.builder()
                 .accessToken(token)
@@ -121,5 +142,13 @@ public class AuthService {
         }
 
         return String.join(",", normalizedRoles);
+    }
+
+    private String trimToNull(String value) {
+        if (value == null) {
+            return null;
+        }
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 }
