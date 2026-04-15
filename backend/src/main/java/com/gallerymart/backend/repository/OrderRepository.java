@@ -28,4 +28,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      * Used by the scheduled job to find expired pending orders.
      */
     List<Order> findByStatusAndExpiresAtBefore(OrderStatus status, LocalDateTime now);
+
+    boolean existsByArtworkIdAndStatus(Long artworkId, OrderStatus status);
 }
