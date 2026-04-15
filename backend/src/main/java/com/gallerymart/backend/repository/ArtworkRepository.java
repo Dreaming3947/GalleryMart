@@ -13,7 +13,9 @@ import java.util.List;
 
 public interface ArtworkRepository extends JpaRepository<Artwork, Long> {
 
-    List<Artwork> findBySellerId(Long sellerId);
+        List<Artwork> findBySellerId(Long sellerId);
+
+        List<Artwork> findBySellerIdOrderByCreatedAtDesc(Long sellerId);
 
     /**
      * Paginated search with optional filters. Only status IN (AVAILABLE, RESERVED) is returned.
