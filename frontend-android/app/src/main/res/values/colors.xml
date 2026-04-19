@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="bg_off_white">#F5F5F5</color>
+    <color name="text_primary">#000000</color>
+    <color name="text_secondary">#616161</color>
+    <color name="divider">#EEEEEE</color>
+
+    <!-- Status Colors -->
+    <color name="status_pending">#FBC02D</color>
+    <color name="status_confirmed">#43A047</color>
+    <color name="status_cancelled">#E53935</color>
+
+    <!-- Original Theme Colors (Compatibility) -->
     <color name="gm_bg">#F9F9F9</color>
     <color name="gm_surface">#FFFFFF</color>
     <color name="gm_text_primary">#2D3435</color>
     <color name="gm_text_secondary">#757C7D</color>
     <color name="gm_dark">#0C0F0F</color>
-    <color name="gm_chip">#F2F4F4</color>
-    <color name="gm_hot">#9E3F4E</color>
-</resources>
 
+    <!-- Missing Colors -->
+    <color name="gm_hot">#FF5252</color>
+    <color name="gm_chip">#E0E0E0</color>
+</resources>

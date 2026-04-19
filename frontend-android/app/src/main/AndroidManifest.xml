@@ -21,8 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".feature.order.ui.buyer.CheckoutActivity" />
+        <activity android:name=".feature.order.ui.buyer.OrderListActivity" />
+        <activity android:name=".feature.order.ui.buyer.OrderDetailActivity" />
     </application>
 
 </manifest>
-
-

@@ -103,4 +103,3 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
     }
 }
-

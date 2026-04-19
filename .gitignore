@@ -1,5 +1,11 @@
 task.md
 skills
+**/.idea/
+**/.gradle/
+**/build/
+**/app/build/
+local.properties
+*.iml
 
 # IDE
 .idea/

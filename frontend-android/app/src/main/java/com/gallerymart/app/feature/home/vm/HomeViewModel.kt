@@ -43,7 +43,7 @@ class HomeViewModel(
 
     private fun fallbackArtworks(): List<ArtworkUiModel> = listOf(
         ArtworkUiModel(
-            id = 1,
+            id = "1",
             title = "Binh Minh Tren Bien",
             author = "Nguyen Van A",
             priceText = "16",
@@ -52,7 +52,7 @@ class HomeViewModel(
             badge = "HOT"
         ),
         ArtworkUiModel(
-            id = 2,
+            id = "2",
             title = "Fragmented Identity",
             author = "Sarah Jenkins",
             priceText = "24",
@@ -61,7 +61,7 @@ class HomeViewModel(
             badge = "AUCTION"
         ),
         ArtworkUiModel(
-            id = 3,
+            id = "3",
             title = "Silent Horizon",
             author = "Minh Tran",
             priceText = "19",
@@ -70,7 +70,7 @@ class HomeViewModel(
             badge = ""
         ),
         ArtworkUiModel(
-            id = 4,
+            id = "4",
             title = "After The Rain",
             author = "Linh Hoang",
             priceText = "21",
@@ -80,4 +80,3 @@ class HomeViewModel(
         )
     )
 }
-

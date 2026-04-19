@@ -2,6 +2,7 @@ package com.gallerymart.app.feature.detail.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import com.gallerymart.app.R
 import com.gallerymart.app.data.remote.dto.ArtworkResponseDto
 import com.gallerymart.app.data.repository.ArtworkRepository
 import com.gallerymart.app.databinding.ActivityArtworkDetailBinding
+import com.gallerymart.app.feature.order.ui.buyer.CheckoutActivity
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -112,11 +114,23 @@ class ArtworkDetailActivity : AppCompatActivity() {
         }
         binding.btnOwnNow.setOnClickListener {
             pressBounce(it)
-            showComingSoon()
+            val id = artworkId ?: ""
+            val title = binding.detailTitle.text.toString()
+            val price = binding.detailBottomPrice.text.toString()
+
+            Log.d("DebugArtworkData", "ID: $id, Title: $title, Price: $price")
+
+            if (id.isNotEmpty()) {
+                startActivity(CheckoutActivity.newIntent(this, id, title, price))
+            } else {
+                Toast.makeText(this, "Không tìm thấy thông tin tác phẩm", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun fetchArtworkDetails(id: Long) {
+    private fun fetchArtworkDetails(id: String) {
+        Log.d("ArtworkDetail", "Fetching details for artwork ID: $id")
+        // MAU GOI API (Gia dinh su dung Retrofit da cau hinh san)
         lifecycleScope.launch {
             try {
                 val artwork = repository.getArtworkById(id)
@@ -170,6 +184,7 @@ class ArtworkDetailActivity : AppCompatActivity() {
     private fun setupRecommendations() {
         val titles = listOf("Góc Phố Vắng", "Chiều Đông", "Nắng Thủy Tinh", "Mùa Thu Cho Em", "Hạ Trắng")
         val prices = listOf("18.000.000 đ", "22.500.000 đ", "15.500.000 đ", "30.000.000 đ", "12.000.000 đ")
+        val ids = listOf("REC-001", "REC-002", "REC-003", "REC-004", "REC-005")
         val imageUrls = listOf(
             "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=600&q=80",
             "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
@@ -185,7 +200,7 @@ class ArtworkDetailActivity : AppCompatActivity() {
         val img1 = imageUrls.random()
         binding.recommendImage1.load(img1)
         binding.recommendItem1.setOnClickListener {
-            navigateToDetail(titles[shuffled[0]], img1, prices[shuffled[0]])
+            navigateToDetail(ids[shuffled[0]], titles[shuffled[0]], img1, prices[shuffled[0]])
         }
 
         // Item 2
@@ -194,19 +209,19 @@ class ArtworkDetailActivity : AppCompatActivity() {
         val img2 = imageUrls.random()
         binding.recommendImage2.load(img2)
         binding.recommendItem2.setOnClickListener {
-            navigateToDetail(titles[shuffled[1]], img2, prices[shuffled[1]])
+            navigateToDetail(ids[shuffled[1]], titles[shuffled[1]], img2, prices[shuffled[1]])
         }
     }
 
-    private fun navigateToDetail(title: String, url: String, price: String) {
+    private fun navigateToDetail(id: String, title: String, url: String, price: String) {
         val intent = Intent(this, ArtworkDetailActivity::class.java).apply {
+            putExtra(EXTRA_ID, id)
             putExtra(EXTRA_TITLE, title)
             putExtra(EXTRA_IMAGE_URL, url)
             putExtra(EXTRA_PRICE, price)
             putExtra(EXTRA_AUTHOR, "Nghệ sĩ ngẫu nhiên")
         }
         startActivity(intent)
-        // Co the finish() neu muon quay lai trang truoc do
     }
 
     private fun formatPrice(rawPrice: String): String {
