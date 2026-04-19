@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="app_background">#EEF2F6</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_alt">#F8FAFC</color>
+    <color name="text_primary">#1E232B</color>
+    <color name="text_secondary">#69707A</color>
+    <color name="border">#D9E1EA</color>
+    <color name="chip_bg">#F4F6F8</color>
+    <color name="accent">#5E738A</color>
+    <color name="accent_dark">#3E546B</color>
+    <color name="accent_light">#8FA4BA</color>
+    <color name="accent_soft">#DDE8F1</color>
+    <color name="amber">#B68C4A</color>
+    <color name="bottom_nav_background">#25292F</color>
+    <color name="button_dark">#11171F</color>
+    <color name="icon_frost">#F4FFFFFF</color>
+    <color name="favorite_red">#E53935</color>
+    <color name="hero_badge_text">#F4F8FB</color>
+</resources>

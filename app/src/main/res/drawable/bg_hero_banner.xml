@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Ảnh nền -->
+    <item>
+        <bitmap
+            android:src="@drawable/bg_1"
+            android:gravity="fill" />
+    </item>
+
+    <!-- Lớp phủ mờ nhẹ để chữ dễ đọc hơn -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#33000000" />
+            <corners android:radius="32dp" />
+        </shape>
+    </item>
+
+    <!-- Hình tròn trang trí bên phải trên -->
+    <item
+        android:top="18dp"
+        android:right="-24dp">
+        <shape android:shape="oval">
+            <size
+                android:width="180dp"
+                android:height="180dp" />
+            <solid android:color="#285E738A" />
+        </shape>
+    </item>
+
+    <!-- Hình tròn trang trí bên trái dưới -->
+    <item
+        android:bottom="-18dp"
+        android:left="-20dp">
+        <shape android:shape="oval">
+            <size
+                android:width="150dp"
+                android:height="150dp" />
+            <solid android:color="#24B6C7D8" />
+        </shape>
+    </item>
+
+</layer-list>
