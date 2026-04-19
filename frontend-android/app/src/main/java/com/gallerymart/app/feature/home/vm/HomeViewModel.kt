@@ -29,12 +29,14 @@ class HomeViewModel(
             }.onSuccess { artworks ->
                 _uiState.value = HomeUiState(
                     isLoading = false,
-                    artworks = artworks
+                    artworks = artworks,
+                    errorMessage = null
                 )
-            }.onFailure {
+            }.onFailure { exception ->
+                // THẤT BẠI: Sử dụng fallbackArtworks để app không bị trắng trơn
                 _uiState.value = HomeUiState(
                     isLoading = false,
-                    errorMessage = null,
+                    errorMessage = "Lỗi kết nối: ${exception.message}. Hiển thị dữ liệu ngoại tuyến.",
                     artworks = fallbackArtworks()
                 )
             }
@@ -46,7 +48,7 @@ class HomeViewModel(
             id = 1,
             title = "Binh Minh Tren Bien",
             author = "Nguyen Van A",
-            priceText = "16",
+            priceText = "16 dM",
             ratingText = "4.8",
             imageUrl = "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=800&q=80",
             badge = "HOT"
@@ -55,7 +57,7 @@ class HomeViewModel(
             id = 2,
             title = "Fragmented Identity",
             author = "Sarah Jenkins",
-            priceText = "24",
+            priceText = "24 dM",
             ratingText = "4.9",
             imageUrl = "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80",
             badge = "AUCTION"
@@ -64,7 +66,7 @@ class HomeViewModel(
             id = 3,
             title = "Silent Horizon",
             author = "Minh Tran",
-            priceText = "19",
+            priceText = "19 dM",
             ratingText = "4.7",
             imageUrl = "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=800&q=80",
             badge = ""
@@ -73,11 +75,10 @@ class HomeViewModel(
             id = 4,
             title = "After The Rain",
             author = "Linh Hoang",
-            priceText = "21",
+            priceText = "21 dM",
             ratingText = "4.8",
             imageUrl = "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=800&q=80",
             badge = ""
         )
     )
 }
-

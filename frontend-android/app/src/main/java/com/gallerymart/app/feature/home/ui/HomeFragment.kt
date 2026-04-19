@@ -1,9 +1,11 @@
 package com.gallerymart.app.feature.home.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -30,6 +32,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var artworkAdapter: ArtworkAdapter
     private var allArtworks: List<ArtworkUiModel> = emptyList()
 
+    private val detailLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            viewModel.loadArtworks()
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -39,16 +47,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         runCatching {
             artworkAdapter = ArtworkAdapter { item ->
-                startActivity(Intent(requireContext(), ArtworkDetailActivity::class.java).apply {
+                val intent = Intent(requireContext(), ArtworkDetailActivity::class.java).apply {
+                    putExtra(ArtworkDetailActivity.EXTRA_ID, item.id.toString())
                     putExtra(ArtworkDetailActivity.EXTRA_TITLE, item.title)
                     putExtra(ArtworkDetailActivity.EXTRA_AUTHOR, item.author)
                     putExtra(ArtworkDetailActivity.EXTRA_PRICE, item.priceText)
                     putExtra(ArtworkDetailActivity.EXTRA_IMAGE_URL, item.imageUrl)
                     putExtra(ArtworkDetailActivity.EXTRA_DESCRIPTION, "Tac pham nghe thuat noi bat tu GalleryMart")
-                        putExtra(ArtworkDetailActivity.EXTRA_YEAR, "1980")
-                        putExtra(ArtworkDetailActivity.EXTRA_MATERIAL, "Son mai")
-                        putExtra(ArtworkDetailActivity.EXTRA_SIZE, "70x90 cm")
-                })
+                    putExtra(ArtworkDetailActivity.EXTRA_YEAR, "1980")
+                    putExtra(ArtworkDetailActivity.EXTRA_MATERIAL, "Son mai")
+                    putExtra(ArtworkDetailActivity.EXTRA_SIZE, "70x90 cm")
+                }
+                detailLauncher.launch(intent)
             }
 
             binding.featuredRecycler.apply {
@@ -120,4 +130,3 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onDestroyView()
     }
 }
-

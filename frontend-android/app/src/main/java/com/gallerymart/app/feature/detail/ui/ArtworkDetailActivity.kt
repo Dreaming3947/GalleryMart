@@ -4,12 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.gallerymart.app.MainActivity
 import com.gallerymart.app.R
 import com.gallerymart.app.databinding.ActivityArtworkDetailBinding
+import com.gallerymart.app.feature.detail.vm.DetailViewModel
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -28,6 +30,7 @@ class ArtworkDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityArtworkDetailBinding
     private var artworkId: String? = null
+    private val viewModel: DetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +47,7 @@ class ArtworkDetailActivity : AppCompatActivity() {
         setupUIWithIntentData()
         setupRecommendations()
         setupListeners()
+        observeViewModel()
     }
 
     private fun setupUIWithIntentData() {
@@ -104,7 +108,9 @@ class ArtworkDetailActivity : AppCompatActivity() {
         }
         binding.btnOwnNow.setOnClickListener {
             pressBounce(it)
-            showComingSoon()
+            artworkId?.let { id ->
+                viewModel.confirmOrder(id.toLong())
+            } ?: showComingSoon()
         }
     }
 
@@ -197,5 +203,25 @@ class ArtworkDetailActivity : AppCompatActivity() {
         view.animate().scaleX(0.96f).scaleY(0.96f).setDuration(80).withEndAction {
             view.animate().scaleX(1f).scaleY(1f).setDuration(120).start()
         }.start()
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            // Vo hieu hoa nut bam khi dang xu ly de tranh double click
+            viewModel.isLoading.collect { isLoading ->
+                binding.btnOwnNow.isEnabled = !isLoading
+                binding.btnOwnNow.alpha = if (isLoading) 0.5f else 1.0f
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.actionResult.collect { (isSuccess, message) ->
+                Toast.makeText(this@ArtworkDetailActivity, message, Toast.LENGTH_SHORT).show()
+                if (isSuccess) {
+                    setResult(RESULT_OK)
+                    finish()
+                }
+            }
+        }
     }
 }
