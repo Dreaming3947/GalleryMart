@@ -9,7 +9,7 @@ import com.gallerymart.app.data.remote.dto.response.OrderResponseDto
 class OrderRepositoryImpl(
     private val api: OrderApi = NetworkModule.createApi(OrderApi::class.java)
 ) {
-    suspend fun createOrder(artworkId: Long, note: String?): ApiResponseDto<OrderResponseDto> {
+    suspend fun createOrder(artworkId: String, note: String?): ApiResponseDto<OrderResponseDto> {
         return api.createOrder(OrderCreateRequestDto(artworkId, note))
     }
 

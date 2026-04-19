@@ -23,7 +23,7 @@ class OrderViewModel(
     private val _checkoutState = MutableStateFlow<OrderUiState<OrderResponseDto>>(OrderUiState.Idle)
     val checkoutState: StateFlow<OrderUiState<OrderResponseDto>> = _checkoutState.asStateFlow()
 
-    fun createOrder(artworkId: Long, note: String?) {
+    fun createOrder(artworkId: String, note: String?) {
         viewModelScope.launch {
             _checkoutState.value = OrderUiState.Loading
             try {

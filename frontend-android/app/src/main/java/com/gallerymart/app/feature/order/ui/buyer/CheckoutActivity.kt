@@ -19,7 +19,7 @@ class CheckoutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheckoutBinding
     private val viewModel: OrderViewModel = OrderViewModel()
 
-    private var artworkId: Long = -1
+    private var artworkId: String = ""
     private var price: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +27,7 @@ class CheckoutActivity : AppCompatActivity() {
         binding = ActivityCheckoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        artworkId = intent.getLongExtra(EXTRA_ARTWORK_ID, -1)
+        artworkId = intent.getStringExtra(EXTRA_ARTWORK_ID) ?: ""
         price = intent.getStringExtra(EXTRA_PRICE) ?: "0 dM"
         val title = intent.getStringExtra(EXTRA_TITLE) ?: ""
 
@@ -41,7 +41,11 @@ class CheckoutActivity : AppCompatActivity() {
         binding.tvTotalAmount.text = price
 
         binding.btnCheckout.setOnClickListener {
-            viewModel.createOrder(artworkId, "Order from checkout screen")
+            if (artworkId.isNotEmpty()) {
+                viewModel.createOrder(artworkId, "Order from checkout screen")
+            } else {
+                Toast.makeText(this, "Lỗi: Không tìm thấy ID tác phẩm", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -79,7 +83,7 @@ class CheckoutActivity : AppCompatActivity() {
         private const val EXTRA_PRICE = "extra_price"
         private const val EXTRA_TITLE = "extra_title"
 
-        fun newIntent(context: Context, artworkId: Long, title: String, price: String): Intent {
+        fun newIntent(context: Context, artworkId: String, title: String, price: String): Intent {
             return Intent(context, CheckoutActivity::class.java).apply {
                 putExtra(EXTRA_ARTWORK_ID, artworkId)
                 putExtra(EXTRA_TITLE, title)

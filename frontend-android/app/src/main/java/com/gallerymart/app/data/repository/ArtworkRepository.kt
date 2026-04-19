@@ -16,7 +16,7 @@ class ArtworkRepository(
 
         return page.items.mapIndexed { index, dto ->
             ArtworkUiModel(
-                id = dto.id,
+                id = dto.id.toString(),
                 title = dto.title,
                 author = dto.sellerName ?: "Unknown artist",
                 priceText = dto.price.stripTrailingZeros().toPlainString() + " dM",
@@ -27,4 +27,3 @@ class ArtworkRepository(
         }
     }
 }
-

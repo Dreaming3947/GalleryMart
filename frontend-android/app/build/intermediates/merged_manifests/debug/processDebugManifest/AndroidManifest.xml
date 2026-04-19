@@ -38,6 +38,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.gallerymart.app.feature.order.ui.buyer.CheckoutActivity" />
+        <activity android:name="com.gallerymart.app.feature.order.ui.buyer.OrderListActivity" />
+        <activity android:name="com.gallerymart.app.feature.order.ui.buyer.OrderDetailActivity" />
         <activity
             android:name="androidx.compose.ui.tooling.PreviewActivity"
             android:exported="true" />

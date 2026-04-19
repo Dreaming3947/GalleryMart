@@ -40,6 +40,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         runCatching {
             artworkAdapter = ArtworkAdapter { item ->
                 startActivity(Intent(requireContext(), ArtworkDetailActivity::class.java).apply {
+                    putExtra(ArtworkDetailActivity.EXTRA_ID, item.id)
                     putExtra(ArtworkDetailActivity.EXTRA_TITLE, item.title)
                     putExtra(ArtworkDetailActivity.EXTRA_AUTHOR, item.author)
                     putExtra(ArtworkDetailActivity.EXTRA_PRICE, item.priceText)
@@ -120,4 +121,3 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onDestroyView()
     }
 }
-

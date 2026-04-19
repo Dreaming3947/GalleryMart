@@ -35,6 +35,7 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
 
         artworkAdapter = ExploreArtworkAdapter { item ->
             startActivity(Intent(requireContext(), ArtworkDetailActivity::class.java).apply {
+                putExtra(ArtworkDetailActivity.EXTRA_ID, item.id)
                 putExtra(ArtworkDetailActivity.EXTRA_TITLE, item.title)
                 putExtra(ArtworkDetailActivity.EXTRA_AUTHOR, item.author)
                 putExtra(ArtworkDetailActivity.EXTRA_PRICE, item.priceText)
@@ -102,4 +103,3 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
     }
 }
-

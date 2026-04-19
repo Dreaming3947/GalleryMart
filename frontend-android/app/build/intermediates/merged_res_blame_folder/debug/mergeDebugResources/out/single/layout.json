@@ -1,42 +1,58 @@
 [
     {
-        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\fragment_explore.xml",
-        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\fragment_explore.xml"
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/fragment_profile.xml",
+        "source": "com.gallerymart.app-main-71:/layout/fragment_profile.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/activity_order_detail.xml",
+        "source": "com.gallerymart.app-main-71:/layout/activity_order_detail.xml"
     },
     {
         "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/activity_artwork_detail.xml",
         "source": "com.gallerymart.app-main-71:/layout/activity_artwork_detail.xml"
     },
     {
-        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\item_artwork.xml",
-        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\item_artwork.xml"
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/activity_order_list.xml",
+        "source": "com.gallerymart.app-main-71:/layout/activity_order_list.xml"
     },
     {
-        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\item_explore_artwork.xml",
-        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\item_explore_artwork.xml"
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/item_order.xml",
+        "source": "com.gallerymart.app-main-71:/layout/item_order.xml"
     },
     {
-        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\fragment_profile.xml",
-        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\fragment_profile.xml"
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/item_explore_artwork.xml",
+        "source": "com.gallerymart.app-main-71:/layout/item_explore_artwork.xml"
     },
     {
-        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\fragment_home.xml",
-        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\fragment_home.xml"
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/activity_checkout.xml",
+        "source": "com.gallerymart.app-main-71:/layout/activity_checkout.xml"
     },
     {
-        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\item_category_chip.xml",
-        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\item_category_chip.xml"
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/dialog_full_image.xml",
+        "source": "com.gallerymart.app-main-71:/layout/dialog_full_image.xml"
     },
     {
-        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\activity_artwork_detail.xml",
-        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\activity_artwork_detail.xml"
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/fragment_home.xml",
+        "source": "com.gallerymart.app-main-71:/layout/fragment_home.xml"
     },
     {
-        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\dialog_full_image.xml",
-        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\dialog_full_image.xml"
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/item_artwork.xml",
+        "source": "com.gallerymart.app-main-71:/layout/item_artwork.xml"
     },
     {
-        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\activity_main.xml",
-        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\activity_main.xml"
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/layout_payment_confirmation_bottom_sheet.xml",
+        "source": "com.gallerymart.app-main-71:/layout/layout_payment_confirmation_bottom_sheet.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/fragment_explore.xml",
+        "source": "com.gallerymart.app-main-71:/layout/fragment_explore.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/item_category_chip.xml",
+        "source": "com.gallerymart.app-main-71:/layout/item_category_chip.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/activity_main.xml",
+        "source": "com.gallerymart.app-main-71:/layout/activity_main.xml"
     }
 ]
