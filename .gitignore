@@ -1,2 +1,33 @@
-task.md
-skills
+# Android Studio / IntelliJ
+.idea/
+*.iml
+.gradle/
+build/
+app/build/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.ap_
+*.dex
+*.class
+
+# Java / Spring Boot (Backend)
+backend/target/
+backend/.gradle/
+backend/build/
+backend/.project
+backend/.classpath
+backend/.settings/
+backend/bin/
+
+# OS / Misc
+.DS_Store
+Thumbs.db
+*.log
+*.temp
+*.tmp
+node_modules/
+.env
+
