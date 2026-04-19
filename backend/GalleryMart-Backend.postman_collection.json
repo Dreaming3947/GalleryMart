@@ -1,0 +1,386 @@
+{
+  "info": {
+    "name": "GalleryMart Backend APIs",
+    "description": "Postman collection for testing current GalleryMart backend APIs. Includes auth flows, artwork CRUD/upload, order flows, and notifications.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "if (!pm.collectionVariables.get('runId')) {",
+          "  pm.collectionVariables.set('runId', String(Date.now()));",
+          "}",
+          "if (!pm.collectionVariables.get('buyerEmail')) {",
+          "  pm.collectionVariables.set('buyerEmail', 'buyer_' + pm.collectionVariables.get('runId') + '@demo.local');",
+          "}",
+          "if (!pm.collectionVariables.get('sellerEmail')) {",
+          "  pm.collectionVariables.set('sellerEmail', 'seller_' + pm.collectionVariables.get('runId') + '@demo.local');",
+          "}",
+          "if (!pm.collectionVariables.get('buyerPassword')) {",
+          "  pm.collectionVariables.set('buyerPassword', '123456');",
+          "}",
+          "if (!pm.collectionVariables.get('sellerPassword')) {",
+          "  pm.collectionVariables.set('sellerPassword', '123456');",
+          "}",
+          "if (!pm.collectionVariables.get('baseUrl')) {",
+          "  pm.collectionVariables.set('baseUrl', 'http://localhost:8080');",
+          "}",
+          "if (!pm.collectionVariables.get('sampleImagePath')) {",
+          "  pm.collectionVariables.set('sampleImagePath', 'D:/GalleryMart/docs/sample.jpg');",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "buyerEmail", "value": "" },
+    { "key": "buyerPassword", "value": "123456" },
+    { "key": "sellerEmail", "value": "" },
+    { "key": "sellerPassword", "value": "123456" },
+    { "key": "buyerToken", "value": "" },
+    { "key": "sellerToken", "value": "" },
+    { "key": "artworkId", "value": "" },
+    { "key": "orderId", "value": "" },
+    { "key": "uploadedImageUrl", "value": "" },
+    { "key": "sampleImagePath", "value": "D:/GalleryMart/docs/sample.jpg" },
+    { "key": "runId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "01 - Auth",
+      "item": [
+        {
+          "name": "Register Buyer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{buyerEmail}}\",\n  \"password\": \"{{buyerPassword}}\",\n  \"fullName\": \"Buyer Demo\"\n}" },
+            "url": "{{baseUrl}}/api/auth/register"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 201 or 409', function () { pm.expect([201, 409]).to.include(pm.response.code); });",
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json && json.data && json.data.accessToken) { pm.collectionVariables.set('buyerToken', json.data.accessToken); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Buyer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{buyerEmail}}\",\n  \"password\": \"{{buyerPassword}}\"\n}" },
+            "url": "{{baseUrl}}/api/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('buyerToken', json.data.accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Register Seller",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{sellerEmail}}\",\n  \"password\": \"{{sellerPassword}}\",\n  \"fullName\": \"Seller Demo\"\n}" },
+            "url": "{{baseUrl}}/api/auth/register"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 201 or 409', function () { pm.expect([201, 409]).to.include(pm.response.code); });",
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json && json.data && json.data.accessToken) { pm.collectionVariables.set('sellerToken', json.data.accessToken); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Seller",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{sellerEmail}}\",\n  \"password\": \"{{sellerPassword}}\"\n}" },
+            "url": "{{baseUrl}}/api/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('sellerToken', json.data.accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Enable Seller Role",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": "{{baseUrl}}/api/auth/me/enable-seller"
+          }
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{buyerToken}}" }],
+            "url": "{{baseUrl}}/api/auth/me"
+          }
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{buyerToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"Buyer Demo Updated\",\n  \"avatarUrl\": \"https://picsum.photos/200\"\n}" },
+            "url": "{{baseUrl}}/api/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Artworks",
+      "item": [
+        {
+          "name": "Upload Artwork Image (Seller)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": "{{sampleImagePath}}" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/artworks/upload-image"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "if (json && json.data && json.data.imageUrl) { pm.collectionVariables.set('uploadedImageUrl', json.data.imageUrl); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Artwork (Seller)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{sellerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Demo Painting {{runId}}\",\n  \"description\": \"Demo description\",\n  \"price\": 199.99,\n  \"imageUrl\": \"{{uploadedImageUrl}}\",\n  \"category\": \"PAINTING\"\n}"
+            },
+            "url": "{{baseUrl}}/api/artworks"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "if (json && json.data && json.data.id) { pm.collectionVariables.set('artworkId', String(json.data.id)); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Search Artworks (Public)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/artworks?page=0&size=12&keyword=Demo"
+          }
+        },
+        {
+          "name": "Get Artwork By Id (Public)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/artworks/{{artworkId}}"
+          }
+        },
+        {
+          "name": "Get My Artworks (Seller)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": "{{baseUrl}}/api/artworks/my"
+          }
+        },
+        {
+          "name": "Update Artwork (Seller)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{sellerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Demo Painting Updated {{runId}}\",\n  \"description\": \"Updated description\",\n  \"price\": 249.99,\n  \"imageUrl\": \"{{uploadedImageUrl}}\",\n  \"category\": \"PAINTING\"\n}"
+            },
+            "url": "{{baseUrl}}/api/artworks/{{artworkId}}"
+          }
+        },
+        {
+          "name": "Delete Artwork (Seller)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": "{{baseUrl}}/api/artworks/{{artworkId}}"
+          }
+        },
+        {
+          "name": "Get Uploaded Image (Public)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}{{uploadedImageUrl}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Orders",
+      "item": [
+        {
+          "name": "Create Order (Buyer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{buyerToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"artworkId\": {{artworkId}},\n  \"note\": \"Demo order note\"\n}" },
+            "url": "{{baseUrl}}/api/orders"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "if (json && json.data && json.data.id) { pm.collectionVariables.set('orderId', String(json.data.id)); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mark Payment Sent (Buyer)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{buyerToken}}" }],
+            "url": "{{baseUrl}}/api/orders/{{orderId}}/payment-sent"
+          }
+        },
+        {
+          "name": "Confirm Order (Seller)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": "{{baseUrl}}/api/orders/{{orderId}}/confirm"
+          }
+        },
+        {
+          "name": "Get My Orders (Buyer)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{buyerToken}}" }],
+            "url": "{{baseUrl}}/api/orders/my"
+          }
+        },
+        {
+          "name": "Get Sales Orders (Seller)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": "{{baseUrl}}/api/orders/sales"
+          }
+        },
+        {
+          "name": "Get Order By Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{buyerToken}}" }],
+            "url": "{{baseUrl}}/api/orders/{{orderId}}"
+          }
+        },
+        {
+          "name": "Cancel Order (Seller)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": "{{baseUrl}}/api/orders/{{orderId}}/cancel"
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Notifications",
+      "item": [
+        {
+          "name": "Get My Notifications (Buyer)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{buyerToken}}" }],
+            "url": "{{baseUrl}}/api/notifications"
+          }
+        },
+        {
+          "name": "Mark All Notifications Read (Buyer)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{buyerToken}}" }],
+            "url": "{{baseUrl}}/api/notifications/read-all"
+          }
+        }
+      ]
+    }
+  ]
+}
