@@ -1,0 +1,42 @@
+[
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\fragment_explore.xml",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\fragment_explore.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-mergeDebugResources-68:/layout/activity_artwork_detail.xml",
+        "source": "com.gallerymart.app-main-71:/layout/activity_artwork_detail.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\item_artwork.xml",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\item_artwork.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\item_explore_artwork.xml",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\item_explore_artwork.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\fragment_profile.xml",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\fragment_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\fragment_home.xml",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\item_category_chip.xml",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\item_category_chip.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\activity_artwork_detail.xml",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\activity_artwork_detail.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\dialog_full_image.xml",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\dialog_full_image.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-mergeDebugResources-68:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\activity_main.xml"
+    }
+]
