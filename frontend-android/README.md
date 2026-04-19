@@ -31,7 +31,9 @@ gradle assembleDebug
 
 ## Notes
 
-- Neu may that dung device that (khong phai emulator), doi `BASE_URL` trong `NetworkModule.kt` thanh IP LAN cua may chay backend.
+- BASE_URL duoc cau hinh tai `gradle.properties` qua key `GALLERYMART_BASE_URL`.
+- Emulator Android: de `GALLERYMART_BASE_URL=http://10.0.2.2:8080/`.
+- Device that cung mang LAN: doi sang `GALLERYMART_BASE_URL=http://<LAN_IP_MAY_BACKEND>:8080/`.
 - Anh du lieu lay tu API (fallback se dung anh placeholder neu `imageUrl` rong).
 
 

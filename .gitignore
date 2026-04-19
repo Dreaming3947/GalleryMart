@@ -6,3 +6,19 @@ skills
 **/app/build/
 local.properties
 *.iml
+
+# IDE
+.idea/
+frontend-android/.idea/
+*.iml
+
+# Java / Maven
+backend/target/
+
+# Android / Gradle
+frontend-android/.gradle/
+frontend-android/build/
+frontend-android/app/build/
+
+# Local machine configs
+frontend-android/local.properties
