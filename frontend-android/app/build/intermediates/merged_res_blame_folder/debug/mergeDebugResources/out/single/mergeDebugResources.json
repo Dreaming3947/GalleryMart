@@ -1,0 +1,146 @@
+[
+    {
+        "merged": "com.gallerymart.app-debug-69:/layout_activity_artwork_detail.xml.flat",
+        "source": "com.gallerymart.app-main-71:/layout/activity_artwork_detail.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_detail_bottom_bar.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_detail_bottom_bar.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_ic_grid_view.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\ic_grid_view.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_bottom_nav_light.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_bottom_nav_light.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\menu_bottom_nav_menu.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\menu\\bottom_nav_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_badge_hot.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_badge_hot.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\color_bottom_nav_icon_tint.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\color\\bottom_nav_icon_tint.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_bottom_nav.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_bottom_nav.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_ic_favorite.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\ic_favorite.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\layout_fragment_home.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_ic_menu.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\ic_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_ic_bolt.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\ic_bolt.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\layout_fragment_explore.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\fragment_explore.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\layout_activity_artwork_detail.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\activity_artwork_detail.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\layout_fragment_profile.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\fragment_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_detail_tab_unselected.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_detail_tab_unselected.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_chip_unselected.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_chip_unselected.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_ic_search.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\ic_search.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_search_bar.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_search_bar.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\layout_item_artwork.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\item_artwork.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_chip.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_chip.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_detail_tab_selected.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_detail_tab_selected.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_hero_card.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_hero_card.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_ic_self_improvement.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\ic_self_improvement.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\layout_dialog_full_image.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\dialog_full_image.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_card.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_card.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_ic_tune.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\ic_tune.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_ic_shopping_bag.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\ic_shopping_bag.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_sell_panel.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_sell_panel.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_badge.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_badge.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_ic_arrow_back.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\ic_arrow_back.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_chip_selected.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_chip_selected.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\layout_item_category_chip.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\item_category_chip.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\layout_item_explore_artwork.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\item_explore_artwork.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\drawable_bg_filter_circle.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\drawable\\bg_filter_circle.xml"
+    },
+    {
+        "merged": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-debug-69:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\lemin\\.gradle\\daemon\\9.0.0\\com.gallerymart.app-main-71:\\layout\\activity_main.xml"
+    }
+]

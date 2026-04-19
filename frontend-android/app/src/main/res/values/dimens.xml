@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="gm_page_padding">16dp</dimen>
+    <dimen name="gm_corner_l">20dp</dimen>
+    <dimen name="gm_corner_m">14dp</dimen>
+    <dimen name="gm_grid_spacing">10dp</dimen>
+</resources>
+
