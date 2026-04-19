@@ -31,10 +31,10 @@ class HomeViewModel(
                     isLoading = false,
                     artworks = artworks
                 )
-            }.onFailure {
+            }.onFailure { throwable ->
                 _uiState.value = HomeUiState(
                     isLoading = false,
-                    errorMessage = null,
+                    errorMessage = throwable.message ?: "Khong the ket noi backend. Dang hien du lieu mau.",
                     artworks = fallbackArtworks()
                 )
             }

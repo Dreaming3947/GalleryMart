@@ -1,13 +1,15 @@
 package com.gallerymart.app.core.network
 
+import com.gallerymart.app.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object NetworkModule {
-    // Emulator default points to host machine localhost:8080.
-    private const val BASE_URL = "http://10.0.2.2:8080/"
+    // Default for Android emulator -> host machine localhost.
+    // Change BASE_URL in build.gradle.kts when demoing with a physical device.
+    private const val BASE_URL = BuildConfig.BASE_URL
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

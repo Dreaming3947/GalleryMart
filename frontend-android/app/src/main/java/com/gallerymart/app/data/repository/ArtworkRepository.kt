@@ -2,6 +2,7 @@ package com.gallerymart.app.data.repository
 
 import com.gallerymart.app.core.network.NetworkModule
 import com.gallerymart.app.data.remote.api.ArtworkApi
+import com.gallerymart.app.data.remote.dto.ArtworkResponseDto
 import com.gallerymart.app.feature.home.model.ArtworkUiModel
 
 class ArtworkRepository(
@@ -25,6 +26,14 @@ class ArtworkRepository(
                 badge = if (index % 3 == 0) "HOT" else ""
             )
         }
+    }
+
+    suspend fun getArtworkById(id: Long): ArtworkResponseDto {
+        val response = api.getArtworkById(id)
+        if (!response.success) {
+            throw IllegalStateException(response.message ?: "API request failed")
+        }
+        return response.data ?: throw IllegalStateException("Artwork not found")
     }
 }
 

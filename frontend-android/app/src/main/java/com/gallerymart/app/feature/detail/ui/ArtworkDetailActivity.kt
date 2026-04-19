@@ -9,6 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.gallerymart.app.MainActivity
 import com.gallerymart.app.R
+import com.gallerymart.app.data.remote.dto.ArtworkResponseDto
+import com.gallerymart.app.data.repository.ArtworkRepository
 import com.gallerymart.app.databinding.ActivityArtworkDetailBinding
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -27,16 +29,22 @@ class ArtworkDetailActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityArtworkDetailBinding
-    private var artworkId: String? = null
+    private val repository = ArtworkRepository()
+    private var artworkId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityArtworkDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        artworkId = intent.getStringExtra(EXTRA_ID)
-        
-        // Goi API gia dinh (Structure for real API call)
+        artworkId = when {
+            intent.hasExtra(EXTRA_ID) -> {
+                val id = intent.getLongExtra(EXTRA_ID, -1L)
+                if (id > 0L) id else null
+            }
+            else -> intent.getStringExtra(EXTRA_ID)?.toLongOrNull()
+        }
+
         if (artworkId != null) {
             fetchArtworkDetails(artworkId!!)
         }
@@ -108,16 +116,34 @@ class ArtworkDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun fetchArtworkDetails(id: String) {
-        // MAU GOI API (Gia dinh su dung Retrofit da cau hinh san)
+    private fun fetchArtworkDetails(id: Long) {
         lifecycleScope.launch {
             try {
-                // val response = RetrofitClient.artworkApi.getArtworkById(id)
-                // if (response.isSuccessful) { updateUI(response.body()) }
-            } catch (e: Exception) {
-                // Xu ly loi
+                val artwork = repository.getArtworkById(id)
+                updateUiFromArtwork(artwork)
+            } catch (_: Exception) {
+                Toast.makeText(
+                    this@ArtworkDetailActivity,
+                    "Khong tai duoc chi tiet tu backend, dang giu du lieu hien tai",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
+    }
+
+    private fun updateUiFromArtwork(artwork: ArtworkResponseDto) {
+        val author = artwork.sellerName.orEmpty().ifBlank { "Unknown artist" }
+        val priceText = artwork.price.stripTrailingZeros().toPlainString()
+
+        binding.detailTitle.text = artwork.title
+        binding.detailMeta.text = getString(R.string.detail_meta, author.uppercase(Locale.getDefault()), "LIVE")
+        binding.detailArtist.text = author
+        binding.detailDescription.text = artwork.description.orEmpty().ifBlank {
+            getString(R.string.detail_default_description)
+        }
+        binding.detailBottomPrice.text = formatPrice(priceText)
+        binding.detailMaterialValue.text = artwork.category.orEmpty().ifBlank { "Khong ro" }
+        binding.detailImage.load(artwork.imageUrl)
     }
 
     private fun showFullScreenImage(url: String?) {
