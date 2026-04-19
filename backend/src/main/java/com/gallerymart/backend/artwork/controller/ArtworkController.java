@@ -1,9 +1,11 @@
 package com.gallerymart.backend.artwork.controller;
 
 import com.gallerymart.backend.artwork.dto.request.ArtworkUpsertRequest;
+import com.gallerymart.backend.artwork.dto.response.ArtworkImageUploadResponse;
 import com.gallerymart.backend.artwork.dto.response.ArtworkPageResponse;
 import com.gallerymart.backend.artwork.dto.response.ArtworkResponse;
 import com.gallerymart.backend.artwork.service.ArtworkService;
+import com.gallerymart.backend.artwork.service.LocalFileStorageService;
 import com.gallerymart.backend.config.ApiResponse;
 import com.gallerymart.backend.entity.User;
 import jakarta.validation.Valid;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,6 +38,7 @@ import java.util.List;
 public class ArtworkController {
 
     private final ArtworkService artworkService;
+    private final LocalFileStorageService localFileStorageService;
 
     @GetMapping
     public ResponseEntity<ApiResponse<ArtworkPageResponse>> searchArtworks(
@@ -90,5 +94,19 @@ public class ArtworkController {
     ) {
         artworkService.deleteArtwork(id, currentUser);
         return ResponseEntity.ok(ApiResponse.success("Artwork deleted successfully", null));
+    }
+
+    @PostMapping("/upload-image")
+    @PreAuthorize("hasRole('SELLER')")
+    public ResponseEntity<ApiResponse<ArtworkImageUploadResponse>> uploadArtworkImage(
+            @RequestParam("file") MultipartFile file
+    ) {
+        String imageUrl = localFileStorageService.storeArtworkImage(file);
+        ArtworkImageUploadResponse response = ArtworkImageUploadResponse.builder()
+                .imageUrl(imageUrl)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Image uploaded successfully", response));
     }
 }
