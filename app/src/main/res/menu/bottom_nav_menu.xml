@@ -3,13 +3,13 @@
     <item
         android:id="@+id/nav_inventory"
         android:icon="@android:drawable/ic_menu_gallery"
-        android:title="Inventory" />
+        android:title="@string/nav_inventory" />
     <item
         android:id="@+id/nav_orders"
         android:icon="@android:drawable/ic_menu_agenda"
-        android:title="Orders" />
+        android:title="@string/nav_orders" />
     <item
         android:id="@+id/nav_notifications"
         android:icon="@android:drawable/ic_popup_reminder"
-        android:title="Alerts" />
+        android:title="@string/nav_alerts" />
 </menu>

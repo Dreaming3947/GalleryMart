@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         
-        binding.bottomNavigation.setupWithNavController(navController)
+        // Setup Navigation (BottomNav for phones, NavRail for tablets/wider screens)
+        binding.bottomNavigation?.setupWithNavController(navController)
+        binding.navigationRail?.setupWithNavController(navController)
     }
 }

@@ -2,4 +2,46 @@
     <string name="app_name">GalleryMart</string>
     <string name="back">Back</string>
     <string name="close">Close</string>
+
+    <!-- Add Artwork -->
+    <string name="studio_creative">STUDIO SÁNG TẠO</string>
+    <string name="display_artwork">Trưng bày tác phẩm</string>
+    <string name="first_photo_desc">Ảnh đầu tiên sẽ là diện mạo chính của tranh.</string>
+    <string name="add_photo">THÊM ẢNH</string>
+    <string name="artwork_title">TÊN TÁC PHẨM</string>
+    <string name="hint_title">Ví dụ: Bình Minh Trên Biển</string>
+    <string name="category">DANH MỤC</string>
+    <string name="artwork_story">CÂU CHUYỆN TÁC PHẨM</string>
+    <string name="hint_description">Điều gì đã truyền cảm hứng cho bạn?</string>
+    <string name="listing_price">GIÁ NIÊM YẾT (VND)</string>
+    <string name="hint_price">0</string>
+    <string name="dimensions">KÍCH THƯỚC</string>
+    <string name="hint_dimensions">VD: 60x80 cm</string>
+    <string name="next">TIẾP THEO</string>
+    <string name="preview_title">Tên tác phẩm</string>
+    <string name="preview_price">0 VND</string>
+
+    <!-- Seller Inventory -->
+    <string name="seller_dashboard">Seller Dashboard</string>
+    <string name="manage_your_shop">QUẢN LÝ CỬA HÀNG CỦA BẠN</string>
+    <string name="total_artworks">TỔNG SỐ TRANH</string>
+    <string name="revenue">DOANH THU</string>
+    <string name="tab_all">ALL</string>
+    <string name="tab_active">ACTIVE</string>
+    <string name="tab_sold">SOLD</string>
+    <string name="tab_pending">PENDING</string>
+    <string name="hint_search_artwork">Tìm tên tranh</string>
+
+    <!-- Item Artwork -->
+    <string name="status_active">ACTIVE</string>
+    <string name="placeholder_title">Bình Minh Trên Biển</string>
+    <string name="placeholder_price">15.500.000 VND</string>
+    <string name="placeholder_views">245</string>
+    <string name="placeholder_likes">42</string>
+    <string name="placeholder_count">--</string>
+    <string name="placeholder_revenue">--</string>
+    <!-- Navigation -->
+    <string name="nav_inventory">Inventory</string>
+    <string name="nav_orders">Orders</string>
+    <string name="nav_alerts">Alerts</string>
 </resources>

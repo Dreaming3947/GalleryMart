@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="app_name">GalleryMart</string>
+    <string name="back">Quay lại</string>
+    <string name="close">Đóng</string>
+    <string name="next">Tiếp theo</string>
+    <string name="add_photo">Thêm ảnh</string>
+
+    <!-- Dashboard -->
+    <string name="seller_dashboard">Bảng điều khiển</string>
+    <string name="manage_your_shop">Quản lý cửa hàng</string>
+    <string name="total_artworks">Tổng tác phẩm</string>
+    <string name="revenue">Doanh thu</string>
+    <string name="hint_search_artwork">Tìm kiếm tác phẩm</string>
+
+    <!-- Tabs -->
+    <string name="tab_all">Tất cả</string>
+    <string name="tab_active">Đang bán</string>
+    <string name="tab_sold">Đã bán</string>
+    <string name="tab_pending">Chờ duyệt</string>
+
+    <!-- Artwork Item -->
+    <string name="status_active">Đang bán</string>
+    <string name="placeholder_title">Tên tác phẩm</string>
+    <string name="placeholder_price">$0.00</string>
+    <string name="placeholder_views">0 lượt xem</string>
+    <string name="placeholder_likes">0 lượt thích</string>
+
+    <!-- Add Artwork Form -->
+    <string name="studio_creative">STUDIO SÁNG TẠO</string>
+    <string name="display_artwork">Hiển thị tác phẩm</string>
+    <string name="first_photo_desc">Ảnh đầu tiên sẽ là ảnh bìa</string>
+    <string name="artwork_title">Tên tác phẩm</string>
+    <string name="category">Danh mục</string>
+    <string name="artwork_story">Câu chuyện tác phẩm</string>
+    <string name="listing_price">Giá niêm yết</string>
+    <string name="dimensions">Kích thước</string>
+    <string name="hint_title">Nhập tên tác phẩm</string>
+    <string name="hint_description">Kể câu chuyện về tác phẩm của bạn</string>
+    <string name="hint_price">0.00</string>
+    <string name="hint_dimensions">Dài x Rộng x Cao (cm)</string>
+    <string name="preview_title">Xem trước tên</string>
+    <string name="preview_price">$0.00</string>
+
+    <!-- Navigation -->
+    <string name="nav_inventory">Kho hàng</string>
+    <string name="nav_orders">Đơn hàng</string>
+    <string name="nav_alerts">Thông báo</string>
+    <string name="placeholder_count">--</string>
+    <string name="placeholder_revenue">--</string>
+</resources>

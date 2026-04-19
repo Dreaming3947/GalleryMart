@@ -3,36 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    app:cardCornerRadius="24dp"
-    app:cardElevation="2dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/stone_100">
+    android:layout_marginBottom="@dimen/spacing_medium"
+    app:cardCornerRadius="@dimen/card_corner_radius_large"
+    app:cardElevation="@dimen/card_elevation"
+    app:strokeColor="@color/stone_900"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="@dimen/spacing_medium">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="@dimen/card_corner_radius"
             app:cardElevation="0dp">
 
             <ImageView
                 android:id="@+id/ivArtwork"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/display_artwork"
                 android:scaleType="centerCrop"
-                android:src="@color/stone_100" />
+                android:src="@color/stone_800" />
         </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/spacing_medium"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -41,11 +42,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/emerald_50"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="2dp"
-                android:text="ACTIVE"
+                android:paddingHorizontal="@dimen/spacing_small"
+                android:paddingVertical="4dp"
+                android:text="@string/status_active"
                 android:textColor="@color/emerald_700"
-                android:textSize="10sp"
+                android:textSize="@dimen/text_caption"
                 android:textStyle="bold" />
 
             <TextView
@@ -55,9 +56,9 @@
                 android:layout_marginTop="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Bình Minh Trên Biển"
+                android:text="@string/placeholder_title"
                 android:textColor="@color/stone_900"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_title"
                 android:textStyle="bold" />
 
             <TextView
@@ -65,57 +66,60 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="15.500.000 VND"
+                android:text="@string/placeholder_price"
                 android:textColor="@color/stone_500"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_body"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/spacing_small"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
+                    android:layout_width="@dimen/icon_small"
+                    android:layout_height="@dimen/icon_small"
+                    android:contentDescription="@null"
                     android:src="@android:drawable/ic_menu_view"
-                    app:tint="@color/stone_300" />
+                    app:tint="@color/stone_800" />
 
                 <TextView
                     android:id="@+id/tvViews"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
-                    android:text="245"
-                    android:textColor="@color/stone_400"
-                    android:textSize="10sp" />
+                    android:text="@string/placeholder_views"
+                    android:textColor="@color/stone_600"
+                    android:textSize="@dimen/text_caption" />
 
                 <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginStart="12dp"
+                    android:layout_width="@dimen/icon_small"
+                    android:layout_height="@dimen/icon_small"
+                    android:layout_marginStart="@dimen/spacing_small"
+                    android:contentDescription="@null"
                     android:src="@android:drawable/btn_star_big_off"
-                    app:tint="@color/stone_300" />
+                    app:tint="@color/stone_500" />
 
                 <TextView
                     android:id="@+id/tvLikes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
-                    android:text="42"
-                    android:textColor="@color/stone_400"
-                    android:textSize="10sp" />
+                    android:text="@string/placeholder_likes"
+                    android:textColor="@color/stone_600"
+                    android:textSize="@dimen/text_caption" />
             </LinearLayout>
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/btnMore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/button_height"
+            android:layout_height="@dimen/button_height"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/close"
             android:src="@android:drawable/ic_menu_more"
-            app:tint="@color/stone_300" />
+            app:tint="@color/stone_800" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

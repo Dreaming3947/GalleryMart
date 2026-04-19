@@ -10,38 +10,40 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp">
+        android:paddingHorizontal="@dimen/spacing_medium"
+        android:paddingVertical="@dimen/spacing_medium">
 
         <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/button_height"
+            android:layout_height="@dimen/button_height"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/back"
             android:src="@android:drawable/ic_media_previous"
-            app:tint="@color/stone_400" />
+            app:tint="@color/black" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_toStartOf="@id/btnClose"
+            android:layout_toEndOf="@id/btnBack"
+            android:gravity="center"
             android:letterSpacing="0.2"
-            android:text="STUDIO SÁNG TẠO"
+            android:text="@string/studio_creative"
             android:textColor="@color/stone_900"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_caption"
             android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/btnClose"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/button_height"
+            android:layout_height="@dimen/button_height"
             android:layout_alignParentEnd="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/close"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
-            app:tint="@color/stone_400" />
+            app:tint="@color/black" />
     </RelativeLayout>
 
     <!-- Step Indicators -->
@@ -51,8 +53,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingHorizontal="32dp"
-        android:paddingVertical="16dp">
+        android:paddingHorizontal="@dimen/spacing_xlarge"
+        android:paddingVertical="@dimen/spacing_medium">
 
         <View
             android:id="@+id/step1Indicator"
@@ -100,7 +102,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="24dp">
+        android:padding="@dimen/spacing_large">
 
         <!-- Step 1: Upload (Mocking with visibility) -->
         <ScrollView
@@ -118,23 +120,23 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Trưng bày tác phẩm"
+                    android:text="@string/display_artwork"
                     android:textColor="@color/stone_900"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/text_display"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Ảnh đầu tiên sẽ là diện mạo chính của tranh."
-                    android:textColor="@color/stone_400"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:text="@string/first_photo_desc"
+                    android:textColor="@color/stone_800"
                     android:textSize="12sp" />
 
                 <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="@dimen/spacing_xlarge"
                     android:columnCount="2"
                     android:rowCount="2">
 
@@ -145,33 +147,23 @@
                         android:layout_columnWeight="1"
                         android:layout_margin="6dp"
                         app:cardBackgroundColor="@color/stone_50"
-                        app:cardCornerRadius="32dp"
+                        app:cardCornerRadius="@dimen/card_corner_radius_xlarge"
                         app:cardElevation="0dp"
                         app:strokeColor="@color/stone_100"
                         app:strokeWidth="2dp">
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:drawablePadding="@dimen/spacing_small"
                             android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:src="@android:drawable/ic_menu_camera"
-                                app:tint="@color/stone_300" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="THÊM ẢNH"
-                                android:textColor="@color/stone_400"
-                                android:textSize="10sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
+                            android:text="@string/add_photo"
+                            android:textColor="@color/primary"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            app:drawableTint="@color/stone_800"
+                            app:drawableTopCompat="@android:drawable/ic_menu_camera" />
                     </com.google.android.material.card.MaterialCardView>
 
                     <com.google.android.material.card.MaterialCardView
@@ -188,6 +180,7 @@
                             android:id="@+id/ivStep1Preview"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:contentDescription="@string/display_artwork"
                             android:scaleType="centerCrop" />
                     </com.google.android.material.card.MaterialCardView>
                 </GridLayout>
@@ -209,29 +202,31 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TÊN TÁC PHẨM"
-                    android:textColor="@color/stone_400"
-                    android:textSize="10sp"
+                    android:text="@string/artwork_title"
+                    android:textColor="@color/stone_600"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/etTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:autofillHints="name"
                     android:background="@drawable/bg_input_field"
-                    android:hint="Ví dụ: Bình Minh Trên Biển..."
-                    android:padding="16dp"
-                    android:textSize="14sp"
+                    android:hint="@string/hint_title"
+                    android:inputType="textCapWords"
+                    android:padding="@dimen/spacing_medium"
+                    android:textSize="@dimen/text_body"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="DANH MỤC"
-                    android:textColor="@color/stone_400"
-                    android:textSize="10sp"
+                    android:text="@string/category"
+                    android:textColor="@color/stone_600"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
 
                 <com.google.android.material.chip.ChipGroup
@@ -247,21 +242,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="CÂU CHUYỆN TÁC PHẨM"
-                    android:textColor="@color/stone_400"
-                    android:textSize="10sp"
+                    android:text="@string/artwork_story"
+                    android:textColor="@color/stone_600"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/etDescription"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:autofillHints="none"
                     android:background="@drawable/bg_input_field"
                     android:gravity="top"
-                    android:hint="Điều gì đã truyền cảm hứng cho bạn?"
-                    android:padding="16dp"
-                    android:textSize="14sp" />
+                    android:hint="@string/hint_description"
+                    android:inputType="textMultiLine"
+                    android:padding="@dimen/spacing_medium"
+                    android:textSize="@dimen/text_body" />
             </LinearLayout>
         </ScrollView>
 
@@ -280,41 +277,44 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="GIÁ NIÊM YẾT (VND)"
-                    android:textColor="@color/stone_400"
-                    android:textSize="10sp"
+                    android:text="@string/listing_price"
+                    android:textColor="@color/stone_600"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/etPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:autofillHints="none"
                     android:background="@drawable/bg_input_field"
-                    android:hint="0"
+                    android:hint="@string/hint_price"
                     android:inputType="numberDecimal"
-                    android:padding="16dp"
-                    android:textSize="14sp"
+                    android:padding="@dimen/spacing_medium"
+                    android:textSize="@dimen/text_body"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="KÍCH THƯỚC"
-                    android:textColor="@color/stone_400"
-                    android:textSize="10sp"
+                    android:text="@string/dimensions"
+                    android:textColor="@color/stone_600"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/etDimensions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:autofillHints="none"
                     android:background="@drawable/bg_input_field"
-                    android:hint="VD: 60x80 cm"
-                    android:padding="16dp"
-                    android:textSize="14sp" />
+                    android:hint="@string/hint_dimensions"
+                    android:inputType="text"
+                    android:padding="@dimen/spacing_medium"
+                    android:textSize="@dimen/text_body" />
             </LinearLayout>
         </ScrollView>
 
@@ -336,10 +336,12 @@
                     android:layout_height="240dp"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="0dp">
+
                     <ImageView
                         android:id="@+id/ivPreview"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:contentDescription="@string/display_artwork"
                         android:scaleType="centerCrop"
                         android:src="@color/stone_100" />
                 </com.google.android.material.card.MaterialCardView>
@@ -349,7 +351,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="Tên tác phẩm"
+                    android:text="@string/preview_title"
                     android:textColor="@color/stone_900"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -359,7 +361,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="0 VND"
+                    android:text="@string/preview_price"
                     android:textColor="@color/stone_600"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -372,36 +374,41 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="horizontal"
-        android:padding="24dp">
+        android:padding="@dimen/spacing_large">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/btnPrev"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="@dimen/button_height_large"
+            android:layout_height="@dimen/button_height_large"
             android:visibility="gone"
             app:cardBackgroundColor="@color/stone_100"
             app:cardCornerRadius="20dp"
             app:cardElevation="0dp">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="@dimen/icon_medium"
+                android:layout_height="@dimen/icon_medium"
                 android:layout_gravity="center"
+                android:contentDescription="@string/back"
                 android:src="@android:drawable/ic_media_previous"
-                app:tint="@color/stone_400" />
+                app:tint="@color/stone_900" />
         </com.google.android.material.card.MaterialCardView>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
-            android:layout_width="0dp"
-            android:layout_height="64dp"
-            android:layout_marginStart="12dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height_large"
+            android:minWidth="120dp"
             android:backgroundTint="@color/stone_900"
             android:letterSpacing="0.2"
-            android:text="TIẾP THEO"
+            android:text="@string/next"
             android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_caption"
             android:textStyle="bold"
             app:cornerRadius="20dp"
             app:icon="@android:drawable/ic_media_next"
