@@ -1,0 +1,6 @@
+com\gallerymart\backend\unit\OrderServiceImplUnitTest.class
+com\gallerymart\backend\unit\ArtworkServiceImplUnitTest.class
+com\gallerymart\backend\unit\AuthServiceUnitTest.class
+com\gallerymart\backend\integration\OrderIntegrationTest.class
+com\gallerymart\backend\integration\AuthIntegrationTest.class
+com\gallerymart\backend\integration\ArtworkIntegrationTest.class

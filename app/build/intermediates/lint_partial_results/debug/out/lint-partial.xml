@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 8.2.2" type="partial_results">
+    <map id="UnsafeIntentLaunch">
+            <map id="unprotected">
+                <entry
+                    name="com.gallerymart.app.MainActivity"
+                    boolean="true"/>
+            </map>
+    </map>
+    <map id="UnusedResources">
+        <location id="R.color.stone_800"
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/values/colors.xml"
+            line="4"
+            column="12"
+            startOffset="109"
+            endLine="4"
+            endColumn="28"
+            endOffset="125"/>
+        <location id="R.color.black"
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/values/colors.xml"
+            line="17"
+            column="12"
+            startOffset="608"
+            endLine="17"
+            endColumn="24"
+            endOffset="620"/>
+        <location id="R.color.red_500"
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/values/colors.xml"
+            line="18"
+            column="12"
+            startOffset="649"
+            endLine="18"
+            endColumn="26"
+            endOffset="663"/>
+        <entry
+            name="model"
+            string="attr[selectableItemBackgroundBorderless(R)],color[emerald_500(U),emerald_700(U),black(D),red_500(D),stone_400(U),stone_500(U),stone_300(U),stone_50(U),white(U),stone_800(D),stone_900(U),stone_600(U),emerald_50(U),stone_100(U),primary(D)],drawable[ic_launcher_foreground(U),bg_input_field(U)],id[etDescription(U),action_sellerInventoryFragment_to_addArtworkFragment(R),btnAddImage(U),fabAddArtwork(U),nav_notifications(D),sellerInventoryFragment(U),ivPreview(U),rvArtworks(U),tvTitle(D),tvReviewPrice(U),cgCategory(D),tvStatus(D),stepIndicatorContainer(D),tvLikes(D),step4Indicator(U),btnMore(D),tvViews(D),nav_inventory(D),nav_orders(D),cvStep1Preview(U),step1Indicator(U),step3Indicator(U),layoutStep3(U),bottom_navigation(U),btnBack(U),layoutStep2(U),btnClose(U),layoutStep4(U),tvTotalArtworks(U),nav_graph(D),layoutStep1(U),btnPrev(U),etDimensions(U),tvReviewTitle(U),btnNext(U),tvRevenue(D),tabLayout(D),nav_host_fragment(U),ivStep1Preview(U),tvPrice(D),etTitle(U),btnSelectionMode(D),ivArtwork(D),step2Indicator(U),addArtworkFragment(U),etPrice(U),stepContainer(D),etSearch(D)],layout[fragment_seller_inventory(U),fragment_add_artwork(U),item_seller_artwork(U),activity_main(U)],menu[bottom_nav_menu(U)],mipmap[ic_launcher_round(U),ic_launcher(U)],navigation[nav_graph(U)],string[app_name(U),appbar_scrolling_view_behavior(R)],style[TextAppearance_Material3_TitleSmall(R),TabTextAppearance(U),Theme_Material3_DayNight_NoActionBar(R),Theme_GalleryMart(U)],xml[network_security_config(U)];f^b,11^8^e,42^8^9^b^5^e^1^4d^7^0^4b^44,43^9^0^5^b^e^8^7^11^c,44^e^d^2^b^6^7^5^0,45^29^49^9^46,47^b^10,48^b^10,49^17^42^3e^43,4d^4c,4f^4e^b^9^e^1;;;"/>
+        <location id="R.color.primary"
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/values/colors.xml"
+            line="20"
+            column="12"
+            startOffset="694"
+            endLine="20"
+            endColumn="26"
+            endOffset="708"/>
+    </map>
+
+</incidents>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/sellerInventoryFragment">
+
+    <fragment
+        android:id="@+id/sellerInventoryFragment"
+        android:name="com.gallerymart.app.feature.artwork.ui.seller.SellerInventoryFragment"
+        android:label="Kho tranh của tôi"
+        tools:layout="@layout/fragment_seller_inventory">
+        <action
+            android:id="@+id/action_sellerInventoryFragment_to_addArtworkFragment"
+            app:destination="@id/addArtworkFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addArtworkFragment"
+        android:name="com.gallerymart.app.feature.artwork.ui.seller.AddArtworkFragment"
+        android:label="Đăng tranh mới"
+        tools:layout="@layout/fragment_add_artwork">
+        <argument
+            android:name="artwork"
+            android:defaultValue="@null"
+            app:argType="com.gallerymart.app.feature.artwork.model.Artwork"
+            app:nullable="true" />
+    </fragment>
+
+</navigation>

@@ -1,0 +1,46 @@
+[
+    {
+        "merged": "com.gallerymart.app-merged_res-49:/navigation_nav_graph.xml.flat",
+        "source": "com.gallerymart.app-main-50:/navigation/nav_graph.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-merged_res-49:/layout_item_seller_artwork.xml.flat",
+        "source": "com.gallerymart.app-main-50:/layout/item_seller_artwork.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-merged_res-49:/menu_bottom_nav_menu.xml.flat",
+        "source": "com.gallerymart.app-main-50:/menu/bottom_nav_menu.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-merged_res-49:/layout_activity_main.xml.flat",
+        "source": "com.gallerymart.app-main-50:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-merged_res-49:/layout_fragment_add_artwork.xml.flat",
+        "source": "com.gallerymart.app-main-50:/layout/fragment_add_artwork.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-merged_res-49:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.gallerymart.app-main-50:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-merged_res-49:/drawable_bg_input_field.xml.flat",
+        "source": "com.gallerymart.app-main-50:/drawable/bg_input_field.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-merged_res-49:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.gallerymart.app-main-50:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-merged_res-49:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.gallerymart.app-main-50:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-merged_res-49:/layout_fragment_seller_inventory.xml.flat",
+        "source": "com.gallerymart.app-main-50:/layout/fragment_seller_inventory.xml"
+    },
+    {
+        "merged": "com.gallerymart.app-merged_res-49:/xml_network_security_config.xml.flat",
+        "source": "com.gallerymart.app-main-50:/xml/network_security_config.xml"
+    }
+]
