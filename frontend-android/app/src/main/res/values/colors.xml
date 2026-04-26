@@ -7,5 +7,15 @@
     <color name="gm_dark">#0C0F0F</color>
     <color name="gm_chip">#F2F4F4</color>
     <color name="gm_hot">#9E3F4E</color>
+    <color name="gm_error">#D32F2F</color>
+    <color name="gm_success">#388E3C</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#111111</color>
+    <color name="divider">#E6E6E6</color>
+    <color name="bg_off_white">#F7F7F5</color>
+    <color name="text_secondary">#757C7D</color>
+    <color name="status_pending">#F9A825</color>
+    <color name="status_confirmed">#2E7D32</color>
+    <color name="status_cancelled">#C62828</color>
 </resources>
 

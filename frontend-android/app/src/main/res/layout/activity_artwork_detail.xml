@@ -192,6 +192,34 @@
                     android:textColor="#575D63"
                     android:textSize="16sp" />
 
+                <!-- Owner Information Section -->
+                <LinearLayout
+                    android:id="@+id/ownerSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/bg_search_bar"
+                    android:orientation="horizontal"
+                    android:padding="14dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_account_circle"
+                        app:tint="#D32F2F" />
+
+                    <TextView
+                        android:id="@+id/tvOwnerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Đã sở hữu bởi: "
+                        android:textColor="#181B1D"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

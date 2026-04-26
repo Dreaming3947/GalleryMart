@@ -10,7 +10,19 @@
     android:supportsRtl="true"
     android:theme="@style/Theme.GalleryMart">
     <activity
+        android:name=".AuthActivity"
+        android:exported="false" />
+    <activity
         android:name=".feature.detail.ui.ArtworkDetailActivity"
+        android:exported="false" />
+    <activity
+        android:name=".feature.order.ui.buyer.CheckoutActivity"
+        android:exported="false" />
+    <activity
+        android:name=".feature.order.ui.buyer.OrderListActivity"
+        android:exported="false" />
+    <activity
+        android:name=".feature.order.ui.buyer.OrderDetailActivity"
         android:exported="false" />
     <activity
         android:name=".MainActivity"

@@ -36,13 +36,42 @@
                 android:textSize="31px"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+            <!-- Notification Bell with Badge -->
+            <FrameLayout
+                android:id="@+id/notificationBellContainer"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_shopping_bag"
-                app:tint="#9EA0A2" />
+                android:background="@drawable/bg_rounded_rectangle"
+                android:backgroundTint="@color/gm_chip"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/notifications"
+                    android:src="@drawable/ic_shopping_bag"
+                    app:tint="#9EA0A2" />
+
+                <!-- Unread Badge -->
+                <TextView
+                    android:id="@+id/notificationBadge"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="-4dp"
+                    android:layout_marginEnd="-4dp"
+                    android:background="@drawable/bg_rounded_rectangle"
+                    android:backgroundTint="@color/gm_hot"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </FrameLayout>
         </RelativeLayout>
 
         <FrameLayout

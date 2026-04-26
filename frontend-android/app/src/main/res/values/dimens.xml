@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="gm_page_padding">16dp</dimen>
-    <dimen name="gm_corner_l">20dp</dimen>
-    <dimen name="gm_corner_m">14dp</dimen>
-    <dimen name="gm_grid_spacing">10dp</dimen>
-</resources>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="button_corner_radius">16dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
 
+    <dimen name="gm_grid_spacing">14dp</dimen>
+</resources>

@@ -9,4 +9,3 @@ data class ArtworkUiModel(
     val imageUrl: String,
     val badge: String
 )
-

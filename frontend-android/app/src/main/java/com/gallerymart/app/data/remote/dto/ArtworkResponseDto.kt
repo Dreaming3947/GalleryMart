@@ -11,6 +11,8 @@ data class ArtworkResponseDto(
     val price: BigDecimal,
     val imageUrl: String?,
     val status: String?,
-    val category: String?
+    val category: String?,
+    val buyerId: Long?,
+    val buyerName: String?
 )
 

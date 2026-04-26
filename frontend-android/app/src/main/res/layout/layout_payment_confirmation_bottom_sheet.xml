@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:background="#E0E0E0" />
+
+    <!-- Confirmation State -->
+    <LinearLayout
+        android:id="@+id/layoutConfirmation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xác nhận thanh toán"
+            android:textColor="#121619"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Vui lòng xác nhận bạn đã thực hiện chuyển khoản cho người bán. Hành động này không thể hoàn tác."
+            android:textColor="#596066" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirmPayment"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#121619"
+            android:text="Đã chuyển khoản"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="27dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBackToHome"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Quay về trang chủ"
+            android:textAllCaps="false"
+            android:textColor="#121619" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hủy"
+            android:textAllCaps="false"
+            android:textColor="#596066" />
+    </LinearLayout>
+
+    <!-- Success State (Hidden by default) -->
+    <LinearLayout
+        android:id="@+id/layoutSuccess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_bolt"
+            app:tint="#4CAF50" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Thanh toán thành công!"
+            android:textColor="#121619"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Yêu cầu của bạn đã được gửi đến người bán."
+            android:textColor="#596066" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFinish"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#121619"
+            android:text="Xong"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="27dp" />
+    </LinearLayout>
+
+</LinearLayout>
