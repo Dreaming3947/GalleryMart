@@ -24,6 +24,8 @@ class OrderDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOrderDetailBinding
     private val viewModel: OrderViewModel = OrderViewModel()
     private var orderId: Long = -1
+    private var paymentDialog: BottomSheetDialog? = null
+    private var bottomSheetBinding: LayoutPaymentConfirmationBottomSheetBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,7 @@ class OrderDetailActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.detailState.collect { state ->
+                    // Handle main order details
                     when (val orderState = state.orderState) {
                         is OrderUiState.Success -> {
                             displayOrderDetails(orderState.data)
@@ -59,14 +62,28 @@ class OrderDetailActivity : AppCompatActivity() {
                         else -> {}
                     }
 
-                    when (val paymentState = state.paymentActionState) {
-                        is OrderUiState.Success -> {
-                            Toast.makeText(this@OrderDetailActivity, "Đã xác nhận thanh toán!", Toast.LENGTH_SHORT).show()
+                    // Handle payment action progress and success
+                    val paymentState = state.paymentActionState
+                    bottomSheetBinding?.let { bs ->
+                        when (paymentState) {
+                            is OrderUiState.Loading -> {
+                                bs.btnConfirmPayment.visibility = View.GONE
+                                bs.paymentProgressBar.visibility = View.VISIBLE
+                            }
+                            is OrderUiState.Success -> {
+                                bs.paymentProgressBar.visibility = View.GONE
+                                bs.layoutConfirmation.visibility = View.GONE
+                                bs.layoutSuccess.visibility = View.VISIBLE
+                                // Update status in background activity
+                                viewModel.getOrderDetails(orderId)
+                            }
+                            is OrderUiState.Error -> {
+                                bs.btnConfirmPayment.visibility = View.VISIBLE
+                                bs.paymentProgressBar.visibility = View.GONE
+                                Toast.makeText(this@OrderDetailActivity, paymentState.message, Toast.LENGTH_LONG).show()
+                            }
+                            else -> {}
                         }
-                        is OrderUiState.Error -> {
-                            Toast.makeText(this@OrderDetailActivity, paymentState.message, Toast.LENGTH_LONG).show()
-                        }
-                        else -> {}
                     }
                 }
             }
@@ -79,29 +96,33 @@ class OrderDetailActivity : AppCompatActivity() {
         
         updateTimeline(order.status)
 
-        if (order.status.uppercase() == "PENDING") {
+        // Only show payment sheet if order is pending and not already shown
+        if (order.status.uppercase() == "PENDING" && paymentDialog == null) {
             showPaymentConfirmationBottomSheet()
         }
     }
 
     private fun updateTimeline(status: String) {
-        // Reset
+        // Reset colors
+        val colorDivider = getColor(R.color.divider)
+        val colorBlack = getColor(R.color.black)
+
         binding.dot1.setBackgroundResource(R.drawable.shape_dot_black)
-        binding.line1.setBackgroundColor(getColor(R.color.divider))
+        binding.line1.setBackgroundColor(colorDivider)
         binding.dot2.setBackgroundResource(R.drawable.shape_dot_gray)
-        binding.line2.setBackgroundColor(getColor(R.color.divider))
+        binding.line2.setBackgroundColor(colorDivider)
         binding.dot3.setBackgroundResource(R.drawable.shape_dot_gray)
 
         when (status.uppercase()) {
             "PENDING" -> {}
-            "CONFIRMED" -> {
-                binding.line1.setBackgroundColor(getColor(R.color.black))
+            "CONFIRMED", "PAYMENT_SENT" -> {
+                binding.line1.setBackgroundColor(colorBlack)
                 binding.dot2.setBackgroundResource(R.drawable.shape_dot_black)
             }
             "DELIVERING", "COMPLETED", "SOLD" -> {
-                binding.line1.setBackgroundColor(getColor(R.color.black))
+                binding.line1.setBackgroundColor(colorBlack)
                 binding.dot2.setBackgroundResource(R.drawable.shape_dot_black)
-                binding.line2.setBackgroundColor(getColor(R.color.black))
+                binding.line2.setBackgroundColor(colorBlack)
                 binding.dot3.setBackgroundResource(R.drawable.shape_dot_black)
             }
         }
@@ -109,28 +130,33 @@ class OrderDetailActivity : AppCompatActivity() {
 
     private fun showPaymentConfirmationBottomSheet() {
         val dialog = BottomSheetDialog(this)
-        val bottomSheetBinding = LayoutPaymentConfirmationBottomSheetBinding.inflate(layoutInflater)
-        dialog.setContentView(bottomSheetBinding.root)
+        val bsBinding = LayoutPaymentConfirmationBottomSheetBinding.inflate(layoutInflater)
+        this.bottomSheetBinding = bsBinding
+        this.paymentDialog = dialog
+        
+        dialog.setContentView(bsBinding.root)
 
-        bottomSheetBinding.btnConfirmPayment.setOnClickListener {
+        bsBinding.btnConfirmPayment.setOnClickListener {
             viewModel.markPaymentSent(orderId)
-            // Show success UI in the bottom sheet
-            bottomSheetBinding.layoutConfirmation.visibility = View.GONE
-            bottomSheetBinding.layoutSuccess.visibility = View.VISIBLE
         }
 
-        bottomSheetBinding.btnBackToHome.setOnClickListener {
+        bsBinding.btnBackToHome.setOnClickListener {
             dialog.dismiss()
             navigateToHome()
         }
 
-        bottomSheetBinding.btnFinish.setOnClickListener {
+        bsBinding.btnFinish.setOnClickListener {
             dialog.dismiss()
-            finish() // Close the current detail activity
+            finish()
         }
 
-        bottomSheetBinding.btnCancel.setOnClickListener {
+        bsBinding.btnCancel.setOnClickListener {
             dialog.dismiss()
+        }
+
+        dialog.setOnDismissListener {
+            this.paymentDialog = null
+            this.bottomSheetBinding = null
         }
 
         dialog.show()

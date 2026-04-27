@@ -48,6 +48,14 @@
             android:textColor="#FFFFFF"
             app:cornerRadius="27dp" />
 
+        <ProgressBar
+            android:id="@+id/paymentProgressBar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:visibility="gone" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnBackToHome"
             style="@style/Widget.MaterialComponents.Button.TextButton"

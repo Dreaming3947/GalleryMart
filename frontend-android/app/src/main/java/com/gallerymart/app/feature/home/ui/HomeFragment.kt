@@ -123,12 +123,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
 
             observeState()
-            viewModel.loadArtworks()
         }.onFailure {
             binding.errorView.visibility = View.VISIBLE
             binding.errorView.text = getString(R.string.home_load_failed)
             binding.loadingView.visibility = View.GONE
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reload artworks every time fragment becomes visible (e.g. returning from checkout)
+        viewModel.loadArtworks()
+        notificationViewModel.loadNotifications()
     }
 
     private fun observeState() {
@@ -316,4 +322,3 @@ class NotificationCenterFragment : Fragment() {
         return root
     }
 }
-

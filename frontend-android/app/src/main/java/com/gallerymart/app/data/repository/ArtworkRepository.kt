@@ -27,9 +27,7 @@ class ArtworkRepository(
 ) {
     /**
      * Load featured artworks for Home/Explore.
-     *
-     * Mapping to [ArtworkUiModel] happens here to keep UI screens focused on rendering,
-     * not on transport DTO details.
+     * Uses real API and maps to UI models.
      */
     suspend fun getFeaturedArtworks(): List<ArtworkUiModel> {
         val response = api.searchArtworks(page = 0, size = 12)
@@ -38,8 +36,7 @@ class ArtworkRepository(
         }
         val page = response.data ?: return emptyList()
 
-        return page.items
-            .mapIndexed { index, dto ->
+        return page.items.mapIndexed { index, dto ->
             val status = dto.status?.uppercase() ?: "AVAILABLE"
             val badge = when (status) {
                 "SOLD" -> "SOLD"
@@ -73,9 +70,6 @@ class ArtworkRepository(
 
     /**
      * Upload image file to backend.
-     *
-     * Why: Separate from createArtwork so upload progress can be shown independently.
-     * Response includes imageUrl to use in artwork creation payload.
      */
     suspend fun uploadArtworkImage(imagePart: MultipartBody.Part): String {
         val response = api.uploadArtworkImage(imagePart)
@@ -88,8 +82,6 @@ class ArtworkRepository(
 
     /**
      * Create artwork after image is uploaded.
-     *
-     * Takes the imageUrl from uploadArtworkImage() response and uses it in payload.
      */
     suspend fun createArtwork(
         title: String,
@@ -123,13 +115,6 @@ class ArtworkRepository(
     }
 }
 
-/**
- * AuthRepository handles all account/session operations.
- *
- * Why this class exists:
- * - Keep auth API details away from UI layer.
- * - Keep token persistence in one place for easy debug.
- */
 class AuthRepository(
     private val api: AuthApi = NetworkModule.authApi
 ) {
@@ -207,12 +192,6 @@ class AuthRepository(
     }
 }
 
-/**
- * Repository for order-related backend calls.
- *
- * Keeping this separate from artwork/auth repository prevents mixed responsibilities
- * and helps isolate order-flow bugs quickly.
- */
 class OrderRepository(
     private val api: OrderApi = NetworkModule.orderApi
 ) {
@@ -305,9 +284,6 @@ class OrderRepository(
     }
 }
 
-/**
- * Repository for notification endpoints used by buyer/seller timeline screens.
- */
 class NotificationRepository(
     private val api: NotificationApi = NetworkModule.notificationApi
 ) {
@@ -327,4 +303,3 @@ class NotificationRepository(
         return response.data?.get("updatedCount") ?: 0
     }
 }
-

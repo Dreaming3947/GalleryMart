@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="gm_primary">#121619</color>
     <color name="gm_bg">#F9F9F9</color>
     <color name="gm_surface">#FFFFFF</color>
     <color name="gm_text_primary">#2D3435</color>
@@ -18,4 +19,3 @@
     <color name="status_confirmed">#2E7D32</color>
     <color name="status_cancelled">#C62828</color>
 </resources>
-
