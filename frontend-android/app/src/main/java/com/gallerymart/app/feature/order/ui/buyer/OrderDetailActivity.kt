@@ -19,6 +19,10 @@ import com.gallerymart.app.feature.order.vm.OrderViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
+/**
+ * Màn hình chi tiết đơn hàng cho Người mua.
+ * Xử lý hiển thị trạng thái đơn hàng và quy trình xác nhận thanh toán.
+ */
 class OrderDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityOrderDetailBinding
@@ -32,11 +36,13 @@ class OrderDetailActivity : AppCompatActivity() {
         binding = ActivityOrderDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Lấy ID đơn hàng được truyền từ màn hình trước
         orderId = intent.getLongExtra(EXTRA_ORDER_ID, -1)
 
         setupListeners()
         observeViewModel()
 
+        // Khởi tạo tải dữ liệu chi tiết đơn hàng
         viewModel.getOrderDetails(orderId)
     }
 
@@ -47,11 +53,15 @@ class OrderDetailActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Lắng nghe sự thay đổi trạng thái từ ViewModel.
+     * Sử dụng StateFlow để cập nhật UI thời gian thực.
+     */
     private fun observeViewModel() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.detailState.collect { state ->
-                    // Handle main order details
+                    // Xử lý dữ liệu đơn hàng thành công
                     when (val orderState = state.orderState) {
                         is OrderUiState.Success -> {
                             displayOrderDetails(orderState.data)
@@ -62,19 +72,21 @@ class OrderDetailActivity : AppCompatActivity() {
                         else -> {}
                     }
 
-                    // Handle payment action progress and success
+                    // Xử lý trạng thái khi người dùng nhấn "Xác nhận thanh toán"
                     val paymentState = state.paymentActionState
                     bottomSheetBinding?.let { bs ->
                         when (paymentState) {
                             is OrderUiState.Loading -> {
+                                // Hiển thị vòng xoay chờ khi đang gọi API
                                 bs.btnConfirmPayment.visibility = View.GONE
                                 bs.paymentProgressBar.visibility = View.VISIBLE
                             }
                             is OrderUiState.Success -> {
+                                // Ẩn loading và hiện màn hình thành công
                                 bs.paymentProgressBar.visibility = View.GONE
                                 bs.layoutConfirmation.visibility = View.GONE
                                 bs.layoutSuccess.visibility = View.VISIBLE
-                                // Update status in background activity
+                                // Cập nhật lại dữ liệu nền sau khi thanh toán thành công
                                 viewModel.getOrderDetails(orderId)
                             }
                             is OrderUiState.Error -> {
@@ -90,36 +102,43 @@ class OrderDetailActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Hiển thị thông tin lên giao diện.
+     */
     private fun displayOrderDetails(order: OrderResponseDto) {
         binding.tvOrderDetailId.text = "Đơn hàng #ORD-${order.id}"
         binding.tvOrderDate.text = "Ngày đặt: ${order.createdAt?.take(10) ?: "N/A"}"
         
         updateTimeline(order.status)
 
-        // Only show payment sheet if order is pending and not already shown
+        // Tự động mở BottomSheet thanh toán nếu đơn hàng đang chờ (Pending)
         if (order.status.uppercase() == "PENDING" && paymentDialog == null) {
             showPaymentConfirmationBottomSheet()
         }
     }
 
+    /**
+     * Cập nhật tiến trình (Timeline) của đơn hàng dựa trên trạng thái.
+     */
     private fun updateTimeline(status: String) {
-        // Reset colors
         val colorDivider = getColor(R.color.divider)
         val colorBlack = getColor(R.color.black)
 
+        // Trạng thái mặc định: Đã đặt hàng
         binding.dot1.setBackgroundResource(R.drawable.shape_dot_black)
-        binding.line1.setBackgroundColor(colorDivider)
-        binding.dot2.setBackgroundResource(R.drawable.shape_dot_gray)
-        binding.line2.setBackgroundColor(colorDivider)
-        binding.dot3.setBackgroundResource(R.drawable.shape_dot_gray)
-
+        
         when (status.uppercase()) {
-            "PENDING" -> {}
+            "PENDING" -> {
+                binding.line1.setBackgroundColor(colorDivider)
+                binding.dot2.setBackgroundResource(R.drawable.shape_dot_gray)
+            }
             "CONFIRMED", "PAYMENT_SENT" -> {
+                // Đã thanh toán hoặc đã xác nhận
                 binding.line1.setBackgroundColor(colorBlack)
                 binding.dot2.setBackgroundResource(R.drawable.shape_dot_black)
             }
             "DELIVERING", "COMPLETED", "SOLD" -> {
+                // Đang giao hoặc hoàn tất
                 binding.line1.setBackgroundColor(colorBlack)
                 binding.dot2.setBackgroundResource(R.drawable.shape_dot_black)
                 binding.line2.setBackgroundColor(colorBlack)
@@ -128,6 +147,9 @@ class OrderDetailActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Hiển thị hộp thoại xác nhận thanh toán dưới dạng BottomSheet.
+     */
     private fun showPaymentConfirmationBottomSheet() {
         val dialog = BottomSheetDialog(this)
         val bsBinding = LayoutPaymentConfirmationBottomSheetBinding.inflate(layoutInflater)

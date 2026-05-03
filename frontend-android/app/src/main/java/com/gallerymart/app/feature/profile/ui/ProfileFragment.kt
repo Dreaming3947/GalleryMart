@@ -2,6 +2,8 @@ package com.gallerymart.app.feature.profile.ui
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,15 +20,19 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import coil.load
+import coil.transform.CircleCropTransformation
 import com.gallerymart.app.AuthActivity
 import com.gallerymart.app.R
 import com.gallerymart.app.core.network.SessionManager
 import com.gallerymart.app.data.repository.ArtworkRepository
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
@@ -36,51 +42,21 @@ import java.io.File
 import java.io.FileOutputStream
 
 /**
- * ProfileFragment manages seller profile and artwork upload.
- *
- * Responsibilities:
- * - Display seller profile information
- * - Tab navigation between profile and upload views
- * - Image picker and file conversion
- * - Coordinate upload flow with ViewModel
- * - Show upload progress and errors to user
- *
- * Debug note: Check SessionManager.userRoles to verify SELLER role before upload.
+ * ProfileFragment quản lý hồ sơ người dùng và chức năng đăng tác phẩm.
+ * Giao diện đã được tối ưu hóa cho mục đích demo chuyên nghiệp.
  */
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val viewModel: ArtworkUploadViewModel by viewModels()
     
-    // Upload flow controls
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let { convertUriToFile(it) }
     }
 
-    // UI Binding (late init to be set in onCreateView)
     private var tabLayout: TabLayout? = null
     private var fragmentContainer: FrameLayout? = null
-    private var imagePreview: ImageView? = null
-    private var imagePreviewContainer: FrameLayout? = null
-    private var placeholderLayout: LinearLayout? = null
-    private var titleInput: EditText? = null
-    private var descriptionInput: EditText? = null
-    private var priceInput: EditText? = null
-    private var categorySpinner: Spinner? = null
-    private var selectImageButton: Button? = null
-    private var uploadImageButton: Button? = null
-    private var createArtworkButton: Button? = null
-    private var uploadProgressBar: ProgressBar? = null
-    private var createProgressBar: ProgressBar? = null
-    private var uploadStatusMessage: TextView? = null
-    private var uploadErrorMessage: TextView? = null
-    private var createErrorMessage: TextView? = null
-    private var successMessage: TextView? = null
-    private var resetButton: Button? = null
-    
-    // Nested placeholder for profile view
-    private var profileInfoContainer: LinearLayout? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,25 +69,23 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Bind views ONLY if we're in the main Profile tab layout
         val mainTab = view.findViewById<TabLayout>(R.id.profileTabLayout)
         if (mainTab != null) {
             setupTabNavigation(view)
         } else {
-            // We're being used as upload-only fragment, bind upload controls directly
             setupUploadControls(view)
         }
     }
 
-    /**
-     * Setup tab navigation between Profile and Upload views.
-     */
     private fun setupTabNavigation(view: View) {
         tabLayout = view.findViewById(R.id.profileTabLayout)
         fragmentContainer = view.findViewById(R.id.fragmentContainer)
 
-        tabLayout?.addTab(tabLayout!!.newTab().setText("Profile"))
-        tabLayout?.addTab(tabLayout!!.newTab().setText("Upload Artwork"))
+        tabLayout?.apply {
+            removeAllTabs()
+            addTab(newTab().setText("Hồ sơ"))
+            addTab(newTab().setText("Đăng tác phẩm"))
+        }
 
         tabLayout?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -120,80 +94,150 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     1 -> showUploadView()
                 }
             }
-
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        // Show profile by default
         showProfileView()
     }
 
     /**
-     * Display user profile information.
+     * Hiển thị giao diện Hồ sơ người dùng với thiết kế Card hiện đại.
      */
     private fun showProfileView() {
         fragmentContainer?.removeAllViews()
+        val context = requireContext()
         
-        val profileLayout = LinearLayout(requireContext()).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
+        val rootLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(16, 16, 16, 16)
-            setBackgroundColor(requireContext().getColor(R.color.gm_bg))
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            setPadding(spToPx(context, 16), spToPx(context, 24), spToPx(context, 16), spToPx(context, 16))
+            setBackgroundColor(ContextCompat.getColor(context, R.color.gm_bg))
         }
 
-        val userEmail = SessionManager.userEmail ?: "Not logged in"
-        val userRoles = SessionManager.userRoles ?: "User"
-
-        val emailView = TextView(requireContext()).apply {
-            text = "Email: $userEmail"
-            textSize = 16f
-            setTextColor(requireContext().getColor(R.color.gm_text_primary))
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            ).apply { bottomMargin = 16 }
+        // --- Card thông tin cá nhân ---
+        val headerCard = MaterialCardView(context).apply {
+            radius = 48f
+            cardElevation = 0f
+            setCardBackgroundColor(Color.WHITE)
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                bottomMargin = spToPx(context, 16)
+            }
         }
 
-        val rolesView = TextView(requireContext()).apply {
-            text = "Role: $userRoles"
-            textSize = 16f
-            setTextColor(requireContext().getColor(R.color.gm_text_primary))
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            ).apply { bottomMargin = 24 }
+        val headerContent = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = android.view.Gravity.CENTER
+            setPadding(spToPx(context, 24), spToPx(context, 32), spToPx(context, 24), spToPx(context, 32))
         }
 
-        val logoutButton = Button(requireContext()).apply {
-            text = "Logout"
-            layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                48
-            ).apply { bottomMargin = 16 }
+        val avatar = ImageView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(spToPx(context, 80), spToPx(context, 80)).apply { bottomMargin = spToPx(context, 12) }
+            // Sử dụng icon có sẵn trong project
+            load(R.drawable.ic_account_circle) {
+                transformations(CircleCropTransformation())
+            }
+        }
+
+        val userName = TextView(context).apply {
+            text = SessionManager.userEmail?.substringBefore("@")?.uppercase() ?: "NGƯỜI DÙNG"
+            textSize = 20f
+            setTypeface(null, Typeface.BOLD)
+            setTextColor(ContextCompat.getColor(context, R.color.gm_text_primary))
+        }
+
+        val userEmail = TextView(context).apply {
+            text = SessionManager.userEmail ?: "email@example.com"
+            textSize = 14f
+            setTextColor(ContextCompat.getColor(context, R.color.gm_text_secondary))
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                topMargin = spToPx(context, 4)
+            }
+        }
+
+        headerContent.addView(avatar)
+        headerContent.addView(userName)
+        headerContent.addView(userEmail)
+        headerCard.addView(headerContent)
+
+        // --- Card thông tin hệ thống ---
+        val infoCard = MaterialCardView(context).apply {
+            radius = 32f
+            cardElevation = 0f
+            setCardBackgroundColor(Color.WHITE)
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
+
+        val infoContent = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(spToPx(context, 20), spToPx(context, 16), spToPx(context, 20), spToPx(context, 16))
+        }
+
+        infoContent.addView(createLabelValueView(context, "VAI TRÒ", SessionManager.userRoles ?: "BUYER"))
+        infoCard.addView(infoContent)
+
+        // --- Nút Đăng xuất nổi bật ---
+        val logoutButton = MaterialButton(context).apply {
+            text = "ĐĂNG XUẤT"
+            textSize = 14f
+            setTypeface(null, Typeface.BOLD)
+            setTextColor(Color.WHITE)
+            backgroundTintList = ContextCompat.getColorStateList(context, R.color.gm_error)
+            cornerRadius = spToPx(context, 28)
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, spToPx(context, 56)).apply {
+                topMargin = spToPx(context, 40)
+            }
             setOnClickListener {
                 SessionManager.clear()
-                startActivity(Intent(requireContext(), AuthActivity::class.java))
+                val intent = Intent(context, AuthActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                startActivity(intent)
                 activity?.finish()
             }
         }
 
-        profileLayout.apply {
-            addView(emailView)
-            addView(rolesView)
-            addView(logoutButton)
-        }
+        rootLayout.addView(headerCard)
+        rootLayout.addView(infoCard)
+        rootLayout.addView(logoutButton)
 
-        profileInfoContainer = profileLayout
-        fragmentContainer?.addView(profileLayout)
+        fragmentContainer?.addView(rootLayout)
+    }
+
+    private fun createLabelValueView(context: Context, label: String, value: String): View {
+        return LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(0, spToPx(context, 8), 0, spToPx(context, 8))
+            
+            val labelTv = TextView(context).apply {
+                text = label
+                textSize = 11f
+                setTextColor(ContextCompat.getColor(context, R.color.gm_text_secondary))
+                setAllCaps(true)
+            }
+            
+            val valueTv = TextView(context).apply {
+                text = value
+                textSize = 16f
+                setTypeface(null, Typeface.BOLD)
+                setTextColor(ContextCompat.getColor(context, R.color.gm_text_primary))
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                    topMargin = spToPx(context, 2)
+                }
+            }
+            
+            addView(labelTv)
+            addView(valueTv)
+        }
     }
 
     /**
-     * Display upload artwork form.
+     * Chuyển đổi đơn vị SP/DP sang Pixels để đảm bảo hiển thị đúng trên các mật độ màn hình khác nhau.
      */
+    private fun spToPx(context: Context, sp: Int): Int {
+        return (sp * context.resources.displayMetrics.density).toInt()
+    }
+
     private fun showUploadView() {
         fragmentContainer?.removeAllViews()
         val uploadView = LayoutInflater.from(requireContext()).inflate(R.layout.layout_upload_artwork, fragmentContainer, false)
@@ -201,11 +245,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         setupUploadControls(uploadView)
     }
 
-    /**
-     * Bind upload form controls and Wire ViewModel state.
-     */
     private fun setupUploadControls(view: View) {
-        // Bind views from XML
         val cardImageContainer = view.findViewById<View>(R.id.cardImageContainer)
         val imagePreview = view.findViewById<ImageView>(R.id.imagePreview)
         val placeholderLayout = view.findViewById<View>(R.id.placeholderLayout)
@@ -221,22 +261,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val btnCreateArtwork = view.findViewById<Button>(R.id.btnCreateArtwork)
         val createProgressBar = view.findViewById<ProgressBar>(R.id.createProgressBar)
         val tvErrorMessage = view.findViewById<TextView>(R.id.tvErrorMessage)
-        val btnReset = view.findViewById<Button>(R.id.btnReset)
 
-        // Setup category spinner
         val categories = arrayOf("PAINTING", "SCULPTURE", "PHOTOGRAPHY", "DIGITAL_ART", "OTHER")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCategory?.adapter = adapter
 
-        // Wire button listeners
-        cardImageContainer?.setOnClickListener {
-            imagePickerLauncher.launch("image/*")
-        }
-
-        btnUploadImage?.setOnClickListener {
-            viewModel.uploadImage()
-        }
+        cardImageContainer?.setOnClickListener { imagePickerLauncher.launch("image/*") }
+        btnUploadImage?.setOnClickListener { viewModel.uploadImage() }
 
         btnCreateArtwork?.setOnClickListener {
             viewModel.updateTitle(etTitle?.text.toString())
@@ -246,40 +278,22 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             viewModel.createArtwork()
         }
 
-        btnReset?.setOnClickListener {
-            viewModel.resetForm()
-            etTitle?.text?.clear()
-            etDescription?.text?.clear()
-            etPrice?.text?.clear()
-            spinnerCategory?.setSelection(0)
-        }
-
-        // Observe ViewModel state changes
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
-                // Update image preview
                 if (state.imageFile != null) {
                     imagePreview?.load(state.imageFile)
                     imagePreview?.visibility = View.VISIBLE
                     placeholderLayout?.visibility = View.GONE
-                    
-                    // Show upload button if not uploaded yet
                     btnUploadImage?.visibility = if (state.imageUrl == null) View.VISIBLE else View.GONE
                 } else {
                     imagePreview?.visibility = View.GONE
                     placeholderLayout?.visibility = View.VISIBLE
                     btnUploadImage?.visibility = View.GONE
                 }
-
-                // Update upload progress
                 uploadProgressBar?.visibility = if (state.isUploadingImage) View.VISIBLE else View.GONE
-                btnUploadImage?.isEnabled = !state.isUploadingImage
-
-                // Update create progress
                 createProgressBar?.visibility = if (state.isCreatingArtwork) View.VISIBLE else View.GONE
                 btnCreateArtwork?.isEnabled = !state.isCreatingArtwork && state.imageUrl != null
-
-                // Update messages
+                
                 uploadStatusMessage?.apply {
                     visibility = if (!state.successMessage.isNullOrEmpty() && state.imageUrl != null) View.VISIBLE else View.GONE
                     text = state.successMessage
@@ -291,57 +305,20 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     text = errorText
                 }
 
-                // Show reset button after success
-                val isSuccess = state.successMessage?.contains("successfully") == true && state.imageUrl == null
-                btnReset?.visibility = if (isSuccess) View.VISIBLE else View.GONE
-                
-                if (isSuccess) {
-                    Toast.makeText(requireContext(), "Đăng tác phẩm thành công!", Toast.LENGTH_LONG).show()
+                if (state.successMessage?.contains("thành công") == true && state.imageUrl == null) {
+                    Toast.makeText(requireContext(), "Thao tác thành công!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    /**
-     * Convert Uri to File for upload.
-     *
-     * Copies image from content provider to app cache directory.
-     */
     private fun convertUriToFile(uri: Uri) {
         try {
             val inputStream = requireContext().contentResolver.openInputStream(uri) ?: return
-            val fileName = "artwork_${System.currentTimeMillis()}.jpg"
-            val file = File(requireContext().cacheDir, fileName)
-            
-            FileOutputStream(file).use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
-            inputStream.close()
-
+            val file = File(requireContext().cacheDir, "artwork_${System.currentTimeMillis()}.jpg")
+            FileOutputStream(file).use { inputStream.copyTo(it) }
             viewModel.selectImage(file)
-        } catch (e: Exception) {
-            uploadErrorMessage?.apply {
-                text = "Failed to select image: ${e.message}"
-                visibility = View.VISIBLE
-            }
-        }
-    }
-
-    /**
-     * Reset upload UI to initial state.
-     */
-    private fun refreshUploadUI() {
-        titleInput?.text?.clear()
-        descriptionInput?.text?.clear()
-        priceInput?.text?.clear()
-        categorySpinner?.setSelection(0)
-        imagePreview?.visibility = View.GONE
-        placeholderLayout?.visibility = View.VISIBLE
-        uploadStatusMessage?.visibility = View.GONE
-        uploadErrorMessage?.visibility = View.GONE
-        createErrorMessage?.visibility = View.GONE
-        successMessage?.visibility = View.GONE
-        resetButton?.visibility = View.GONE
+        } catch (e: Exception) {}
     }
 }
 
@@ -362,105 +339,46 @@ data class ArtworkUploadUiState(
 class ArtworkUploadViewModel(
     private val repository: ArtworkRepository = ArtworkRepository()
 ) : androidx.lifecycle.ViewModel() {
-
     private val _uiState = kotlinx.coroutines.flow.MutableStateFlow(ArtworkUploadUiState())
-    val uiState: kotlinx.coroutines.flow.StateFlow<ArtworkUploadUiState> = _uiState
+    val uiState = _uiState
 
     fun selectImage(file: File) {
-        _uiState.value = _uiState.value.copy(
-            imageFile = file,
-            imageUrl = null,
-            uploadErrorMessage = null,
-            createErrorMessage = null,
-            successMessage = null
-        )
+        _uiState.value = _uiState.value.copy(imageFile = file, imageUrl = null)
     }
-
-    fun updateTitle(value: String) {
-        _uiState.value = _uiState.value.copy(title = value)
-    }
-
-    fun updateDescription(value: String) {
-        _uiState.value = _uiState.value.copy(description = value)
-    }
-
-    fun updatePrice(value: String) {
-        _uiState.value = _uiState.value.copy(price = value)
-    }
-
-    fun updateCategory(value: String) {
-        _uiState.value = _uiState.value.copy(category = value)
-    }
+    fun updateTitle(v: String) { _uiState.value = _uiState.value.copy(title = v) }
+    fun updateDescription(v: String) { _uiState.value = _uiState.value.copy(description = v) }
+    fun updatePrice(v: String) { _uiState.value = _uiState.value.copy(price = v) }
+    fun updateCategory(v: String) { _uiState.value = _uiState.value.copy(category = v) }
 
     fun uploadImage() {
         val selectedFile = _uiState.value.imageFile ?: return
-
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isUploadingImage = true,
-                uploadErrorMessage = null,
-                successMessage = null
-            )
-
+            _uiState.value = _uiState.value.copy(isUploadingImage = true)
             runCatching {
                 val body = selectedFile.asRequestBody("image/*".toMediaType())
                 val part = MultipartBody.Part.createFormData("file", selectedFile.name, body)
                 repository.uploadArtworkImage(part)
-            }.onSuccess { imageUrl ->
-                _uiState.value = _uiState.value.copy(
-                    isUploadingImage = false,
-                    imageUrl = imageUrl,
-                    successMessage = "Image uploaded successfully"
-                )
-            }.onFailure { error ->
-                _uiState.value = _uiState.value.copy(
-                    isUploadingImage = false,
-                    uploadErrorMessage = error.message ?: "Image upload failed"
-                )
+            }.onSuccess { url ->
+                _uiState.value = _uiState.value.copy(isUploadingImage = false, imageUrl = url, successMessage = "Tải ảnh thành công")
+            }.onFailure { e ->
+                _uiState.value = _uiState.value.copy(isUploadingImage = false, uploadErrorMessage = e.message)
             }
         }
     }
 
     fun createArtwork() {
         val state = _uiState.value
-        if (state.imageUrl.isNullOrBlank()) {
-            _uiState.value = state.copy(createErrorMessage = "Please upload image before creating artwork")
-            return
-        }
-        if (state.title.isBlank() || state.price.isBlank()) {
-            _uiState.value = state.copy(createErrorMessage = "Title and price are required")
-            return
-        }
-
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                isCreatingArtwork = true,
-                createErrorMessage = null,
-                successMessage = null
-            )
-
+            _uiState.value = _uiState.value.copy(isCreatingArtwork = true)
             runCatching {
-                repository.createArtwork(
-                    title = state.title.trim(),
-                    description = state.description.trim(),
-                    price = state.price.trim(),
-                    category = state.category,
-                    imageUrl = state.imageUrl
-                )
+                repository.createArtwork(state.title, state.description, state.price, state.category, state.imageUrl!!)
             }.onSuccess {
-                _uiState.value = ArtworkUploadUiState(successMessage = "Artwork created successfully")
-            }.onFailure { error ->
-                _uiState.value = _uiState.value.copy(
-                    isCreatingArtwork = false,
-                    createErrorMessage = error.message ?: "Create artwork failed"
-                )
+                _uiState.value = ArtworkUploadUiState(successMessage = "Tạo tác phẩm thành công!")
+            }.onFailure { e ->
+                _uiState.value = _uiState.value.copy(isCreatingArtwork = false, createErrorMessage = e.message)
             }
         }
     }
 
-    fun resetForm() {
-        _uiState.value = ArtworkUploadUiState()
-    }
+    fun resetForm() { _uiState.value = ArtworkUploadUiState() }
 }
-
-

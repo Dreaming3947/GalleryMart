@@ -39,6 +39,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/**
+ * Fragment Trang chủ: Hiển thị danh sách tác phẩm nghệ thuật.
+ * Chịu trách nhiệm hiển thị Hero Banner, tìm kiếm và danh sách chính.
+ */
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -56,94 +60,96 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             .getOrElse { return }
         _binding = boundView
 
-        runCatching {
-            artworkAdapter = ArtworkAdapter { item ->
-                startActivity(Intent(requireContext(), ArtworkDetailActivity::class.java).apply {
-                    putExtra(ArtworkDetailActivity.EXTRA_ID, item.id)
-                    putExtra(ArtworkDetailActivity.EXTRA_TITLE, item.title)
-                    putExtra(ArtworkDetailActivity.EXTRA_AUTHOR, item.author)
-                    putExtra(ArtworkDetailActivity.EXTRA_PRICE, item.priceText)
-                    putExtra(ArtworkDetailActivity.EXTRA_IMAGE_URL, item.imageUrl)
-                    putExtra(ArtworkDetailActivity.EXTRA_DESCRIPTION, "Tac pham nghe thuat noi bat tu GalleryMart")
-                        putExtra(ArtworkDetailActivity.EXTRA_YEAR, "1980")
-                        putExtra(ArtworkDetailActivity.EXTRA_MATERIAL, "Son mai")
-                        putExtra(ArtworkDetailActivity.EXTRA_SIZE, "70x90 cm")
-                })
-            }
+        setupRecyclerView()
+        setupSearch()
+        setupClickListeners()
+        observeState()
+    }
 
-            binding.featuredRecycler.apply {
-                layoutManager = GridLayoutManager(requireContext(), 2)
-                adapter = artworkAdapter
-                if (itemDecorationCount == 0) {
-                    val spacing = resources.getDimensionPixelSize(R.dimen.gm_grid_spacing)
-                    addItemDecoration(GridSpacingItemDecoration(2, spacing, includeEdge = false))
-                }
-            }
+    /**
+     * Cấu hình danh sách hiển thị dạng lưới (Grid 2 cột).
+     */
+    private fun setupRecyclerView() {
+        artworkAdapter = ArtworkAdapter { item ->
+            // Chuyển sang màn hình chi tiết khi nhấn vào một tác phẩm
+            startActivity(Intent(requireContext(), ArtworkDetailActivity::class.java).apply {
+                putExtra(ArtworkDetailActivity.EXTRA_ID, item.id)
+                putExtra(ArtworkDetailActivity.EXTRA_TITLE, item.title)
+                putExtra(ArtworkDetailActivity.EXTRA_AUTHOR, item.author)
+                putExtra(ArtworkDetailActivity.EXTRA_PRICE, item.priceText)
+                putExtra(ArtworkDetailActivity.EXTRA_IMAGE_URL, item.imageUrl)
+            })
+        }
 
-            binding.searchInput.addTextChangedListener { editable ->
-                applyFilter(editable?.toString().orEmpty())
+        binding.featuredRecycler.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = artworkAdapter
+            if (itemDecorationCount == 0) {
+                val spacing = resources.getDimensionPixelSize(R.dimen.gm_grid_spacing)
+                addItemDecoration(GridSpacingItemDecoration(2, spacing, includeEdge = false))
             }
-
-            binding.btnExploreGallery.setOnClickListener {
-                (activity as? MainActivity)?.navigateToTab(R.id.nav_explore)
-            }
-            binding.btnSellArt.setOnClickListener {
-                (activity as? MainActivity)?.navigateToTab(R.id.nav_profile)
-            }
-            binding.btnUploadArtwork.setOnClickListener {
-                (activity as? MainActivity)?.navigateToTab(R.id.nav_profile)
-            }
-            binding.btnBecomeSeller.setOnClickListener {
-                enableSellerRole()
-            }
-            binding.btnHomeTune.setOnClickListener { showComingSoon() }
-
-            binding.heroImage.load("https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1200&q=80")
-
-            // Setup notification bell
-            val notificationBellContainer = view.findViewById<FrameLayout>(R.id.notificationBellContainer)
-            val notificationBadge = view.findViewById<TextView>(R.id.notificationBadge)
-            
-            notificationBellContainer?.setOnClickListener {
-                // Navigate to notification center
-                (activity as? MainActivity)?.navigateToNotificationCenter()
-            }
-
-            // Observe notification unread count
-            viewLifecycleOwner.lifecycleScope.launch {
-                notificationViewModel.uiState.collect { state ->
-                    // Update badge visibility and text
-                    if (state.unreadCount > 0) {
-                        notificationBadge?.text = state.unreadCount.toString()
-                        notificationBadge?.visibility = View.VISIBLE
-                    } else {
-                        notificationBadge?.visibility = View.GONE
-                    }
-                }
-            }
-
-            observeState()
-        }.onFailure {
-            binding.errorView.visibility = View.VISIBLE
-            binding.errorView.text = getString(R.string.home_load_failed)
-            binding.loadingView.visibility = View.GONE
         }
     }
 
+    /**
+     * Xử lý tìm kiếm tác phẩm theo tên hoặc nghệ sĩ.
+     */
+    private fun setupSearch() {
+        binding.searchInput.addTextChangedListener { editable ->
+            applyFilter(editable?.toString().orEmpty())
+        }
+    }
+
+    private fun setupClickListeners() {
+        binding.btnExploreGallery.setOnClickListener {
+            (activity as? MainActivity)?.navigateToTab(R.id.nav_explore)
+        }
+        binding.btnBecomeSeller.setOnClickListener {
+            enableSellerRole()
+        }
+        // Load ảnh bìa từ URL bên ngoài
+        binding.heroImage.load("https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1200&q=80")
+
+        // Cấu hình chuông thông báo
+        val notificationBellContainer = view?.findViewById<FrameLayout>(R.id.notificationBellContainer)
+        val notificationBadge = view?.findViewById<TextView>(R.id.notificationBadge)
+        
+        notificationBellContainer?.setOnClickListener {
+            (activity as? MainActivity)?.navigateToNotificationCenter()
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            notificationViewModel.uiState.collect { state ->
+                if (state.unreadCount > 0) {
+                    notificationBadge?.text = state.unreadCount.toString()
+                    notificationBadge?.visibility = View.VISIBLE
+                } else {
+                    notificationBadge?.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    /**
+     * Tự động tải lại dữ liệu mỗi khi người dùng quay lại màn hình này.
+     * Giúp cập nhật ngay lập tức các thay đổi trạng thái (ví dụ: sau khi mua tranh).
+     */
     override fun onResume() {
         super.onResume()
-        // Reload artworks every time fragment becomes visible (e.g. returning from checkout)
         viewModel.loadArtworks()
         notificationViewModel.loadNotifications()
     }
 
+    /**
+     * Lắng nghe luồng dữ liệu (StateFlow) từ ViewModel để cập nhật giao diện.
+     */
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
                     binding.loadingView.visibility = if (state.isLoading) View.VISIBLE else View.GONE
                     binding.errorView.visibility = if (state.errorMessage.isNullOrBlank()) View.GONE else View.VISIBLE
-                    binding.errorView.text = state.errorMessage
+                    
                     allArtworks = state.artworks
                     applyFilter(binding.searchInput.text?.toString().orEmpty())
                 }
@@ -163,23 +169,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         artworkAdapter.submitList(filtered)
     }
 
-    private fun showComingSoon() {
-        Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
-    }
-
     private fun enableSellerRole() {
-        if (SessionManager.accessToken.isNullOrBlank()) {
-            Toast.makeText(requireContext(), "Please login first", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         viewLifecycleOwner.lifecycleScope.launch {
             runCatching { authRepository.enableSellerRole() }
                 .onSuccess {
-                    Toast.makeText(requireContext(), "Seller role enabled", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Đã kích hoạt quyền người bán!", Toast.LENGTH_SHORT).show()
                 }
                 .onFailure { error ->
-                    Toast.makeText(requireContext(), error.message ?: "Enable seller failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Lỗi: ${error.message}", Toast.LENGTH_SHORT).show()
                 }
         }
     }
@@ -190,6 +187,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 }
 
+/**
+ * Quản lý trạng thái thông báo.
+ */
 data class NotificationCenterUiState(
     val notifications: List<NotificationResponseDto> = emptyList(),
     val unreadCount: Int = 0,
@@ -226,7 +226,7 @@ class NotificationViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = error.message ?: "Load notifications failed"
+                            errorMessage = error.message ?: "Lỗi tải thông báo"
                         )
                     }
                 }
@@ -243,7 +243,7 @@ class NotificationViewModel(
                             isMarkingAllRead = false,
                             notifications = it.notifications.map { n -> n.copy(isRead = true) },
                             unreadCount = 0,
-                            successMessage = "Marked $updated notifications as read"
+                            successMessage = "Đã đánh dấu $updated thông báo là đã đọc"
                         )
                     }
                 }
@@ -251,7 +251,7 @@ class NotificationViewModel(
                     _uiState.update {
                         it.copy(
                             isMarkingAllRead = false,
-                            errorMessage = error.message ?: "Mark all read failed"
+                            errorMessage = error.message ?: "Lỗi xử lý"
                         )
                     }
                 }
@@ -263,6 +263,9 @@ class NotificationViewModel(
     }
 }
 
+/**
+ * Fragment hiển thị trung tâm thông báo.
+ */
 class NotificationCenterFragment : Fragment() {
     private val viewModel: NotificationViewModel by viewModels()
 
@@ -277,9 +280,9 @@ class NotificationCenterFragment : Fragment() {
             setPadding(24, 24, 24, 24)
         }
 
-        val backButton = Button(context).apply { text = "Back" }
-        val markReadButton = Button(context).apply { text = "Mark all read" }
-        val unreadText = TextView(context).apply { text = "Unread: 0" }
+        val backButton = Button(context).apply { text = "Quay lại" }
+        val markReadButton = Button(context).apply { text = "Đánh dấu tất cả là đã đọc" }
+        val unreadText = TextView(context).apply { text = "Chưa đọc: 0" }
         val loading = ProgressBar(context).apply { visibility = View.GONE }
         val error = TextView(context).apply { visibility = View.GONE }
         val listView = ListView(context)
@@ -304,7 +307,7 @@ class NotificationCenterFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-                    unreadText.text = "Unread: ${state.unreadCount}"
+                    unreadText.text = "Chưa đọc: ${state.unreadCount}"
                     loading.visibility = if (state.isLoading) View.VISIBLE else View.GONE
                     error.visibility = if (state.errorMessage.isNullOrBlank()) View.GONE else View.VISIBLE
                     error.text = state.errorMessage
