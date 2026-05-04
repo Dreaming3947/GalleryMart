@@ -32,13 +32,22 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 
+/**
+ * Hoạt động chính của ứng dụng, quản lý điều hướng giữa các Tab (Home, Explore, Profile).
+ */
 class MainActivity : AppCompatActivity() {
     private var binding: ActivityMainBinding? = null
 
+    /**
+     * Chuyển sang một Tab cụ thể dựa trên ID.
+     */
     fun navigateToTab(tabId: Int) {
         binding?.bottomNav?.selectedItemId = tabId
     }
 
+    /**
+     * Mở màn hình Trung tâm thông báo.
+     */
     fun navigateToNotificationCenter() {
         openScreen(NotificationCenterFragment())
         binding?.bottomNav?.selectedItemId = 0
@@ -50,6 +59,9 @@ class MainActivity : AppCompatActivity() {
         handleIntent(intent)
     }
 
+    /**
+     * Xử lý các Intent truyền vào để điều hướng màn hình.
+     */
     private fun handleIntent(intent: Intent?) {
         val tabId = intent?.getIntExtra("NAVIGATE_TO", -1) ?: -1
         if (tabId != -1) {
@@ -61,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         NetworkModule.init(this)
 
+        // Kiểm tra nếu chưa đăng nhập thì chuyển hướng sang AuthActivity
         if (SessionManager.accessToken.isNullOrBlank()) {
             startActivity(Intent(this, AuthActivity::class.java))
             finish()
@@ -77,6 +90,7 @@ class MainActivity : AppCompatActivity() {
 
         showStartupPlaceholder(getString(R.string.app_starting))
 
+        // Khởi tạo màn hình đầu tiên
         if (savedInstanceState == null || supportFragmentManager.findFragmentById(R.id.fragmentContainer) == null) {
             openInitialScreen()
             handleIntent(intent)
@@ -84,6 +98,7 @@ class MainActivity : AppCompatActivity() {
             hideStartupPlaceholder()
         }
 
+        // Thiết lập sự kiện chọn Tab ở thanh điều hướng dưới cùng
         safeBinding.bottomNav.setOnItemSelectedListener { item ->
             val fragment = when (item.itemId) {
                 R.id.nav_home -> HomeFragment()
@@ -96,6 +111,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Mở màn hình mặc định khi khởi động ứng dụng.
+     */
     private fun openInitialScreen() {
         if (openScreen(HomeFragment())) {
             binding?.bottomNav?.selectedItemId = R.id.nav_home
@@ -109,6 +127,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Thực hiện thay thế Fragment hiện tại trong container.
+     */
     private fun openScreen(fragment: Fragment): Boolean {
         return runCatching {
             supportFragmentManager.beginTransaction()
@@ -130,6 +151,9 @@ class MainActivity : AppCompatActivity() {
         binding?.startupPlaceholder?.visibility = View.GONE
     }
 
+    /**
+     * Hiển thị UI dự phòng nếu xảy ra lỗi nghiêm trọng khi khởi tạo giao diện.
+     */
     private fun showHardFallbackUi() {
         val container = FrameLayout(this).apply {
             setBackgroundColor(Color.WHITE)
@@ -152,7 +176,8 @@ class MainActivity : AppCompatActivity() {
 }
 
 /**
- * AuthActivity handles Login and Registration with a modern UI.
+ * Hoạt động quản lý Đăng nhập và Đăng ký.
+ * Sử dụng View Code hoàn toàn để xây dựng giao diện thay vì XML truyền thống.
  */
 class AuthActivity : AppCompatActivity() {
     private val authRepository = AuthRepository()
@@ -162,7 +187,7 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         NetworkModule.init(this)
 
-        // Root container with brand background
+        // Cấu hình giao diện bằng code (Programmatic UI)
         val root = FrameLayout(this).apply {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             setBackgroundColor(ContextCompat.getColor(this@AuthActivity, R.color.gm_bg))
@@ -174,7 +199,6 @@ class AuthActivity : AppCompatActivity() {
             setPadding(64, 120, 64, 64)
         }
 
-        // Brand Logo Placeholder / Title
         val brandTitle = TextView(this).apply {
             text = "GalleryMart"
             textSize = 32f
@@ -187,7 +211,7 @@ class AuthActivity : AppCompatActivity() {
         }
 
         val subTitle = TextView(this).apply {
-            text = "Discover and trade unique artworks"
+            text = "Khám phá và giao dịch nghệ thuật độc bản"
             textSize = 14f
             setTextColor(Color.GRAY)
             gravity = Gravity.CENTER
@@ -196,7 +220,6 @@ class AuthActivity : AppCompatActivity() {
             }
         }
 
-        // Form Card
         val card = MaterialCardView(this).apply {
             radius = 32f
             cardElevation = 0f
@@ -209,18 +232,18 @@ class AuthActivity : AppCompatActivity() {
             orientation = LinearLayout.VERTICAL
         }
 
-        // Inputs
-        val nameInputLayout = createTextInputLayout("Full Name")
+        // Các ô nhập liệu cho biểu mẫu
+        val nameInputLayout = createTextInputLayout("Họ và Tên")
         val nameInput = nameInputLayout.editText as TextInputEditText
         
-        val emailInputLayout = createTextInputLayout("Email Address")
+        val emailInputLayout = createTextInputLayout("Địa chỉ Email")
         val emailInput = emailInputLayout.editText as TextInputEditText
         
-        val passwordInputLayout = createTextInputLayout("Password", isPassword = true)
+        val passwordInputLayout = createTextInputLayout("Mật khẩu", isPassword = true)
         val passwordInput = passwordInputLayout.editText as TextInputEditText
 
         val primaryButton = MaterialButton(this).apply {
-            text = "Login"
+            text = "Đăng nhập"
             cornerRadius = 24
             setPadding(0, 32, 0, 32)
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
@@ -237,7 +260,7 @@ class AuthActivity : AppCompatActivity() {
         }
 
         val switchModeText = TextView(this).apply {
-            text = "Don't have an account? Register"
+            text = "Chưa có tài khoản? Đăng ký ngay"
             textSize = 13f
             setTextColor(Color.GRAY)
             gravity = Gravity.CENTER
@@ -260,22 +283,23 @@ class AuthActivity : AppCompatActivity() {
         root.addView(scrollContainer)
         setContentView(root)
 
-        // Initial UI State
         updateUiMode(nameInputLayout, primaryButton, switchModeText)
 
-        // Listeners
+        // Chuyển đổi giữa chế độ Đăng nhập và Đăng ký
         switchModeText.setOnClickListener {
             isLoginMode = !isLoginMode
             updateUiMode(nameInputLayout, primaryButton, switchModeText)
         }
 
+        // Xử lý sự kiện nhấn nút chính (Đăng nhập hoặc Đăng ký)
         primaryButton.setOnClickListener {
             val email = emailInput.text.toString().trim()
             val password = passwordInput.text.toString().trim()
             val name = nameInput.text.toString().trim()
 
+            // Kiểm tra tính hợp lệ cơ bản của dữ liệu nhập
             if (email.isBlank() || password.isBlank() || (!isLoginMode && name.isBlank())) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -284,19 +308,25 @@ class AuthActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 runCatching {
+                    // Gọi API thông qua Repository
                     if (isLoginMode) authRepository.login(email, password)
                     else authRepository.register(email, password, name)
                 }.onSuccess {
+                    // Đăng nhập thành công, chuyển đến màn hình chính
                     openMain()
                 }.onFailure { error ->
+                    // Hiển thị thông báo lỗi (bao gồm cả lỗi 409 đã được xử lý trong Repository)
                     primaryButton.visibility = View.VISIBLE
                     loadingBar.visibility = View.GONE
-                    Toast.makeText(this@AuthActivity, error.message ?: "Authentication failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AuthActivity, error.message ?: "Xác thực thất bại", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
+    /**
+     * Helper tạo một ô nhập liệu với style Material Design (OutlinedBox).
+     */
     private fun createTextInputLayout(hintText: String, isPassword: Boolean = false): TextInputLayout {
         return TextInputLayout(this).apply {
             hint = hintText
@@ -319,15 +349,18 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Cập nhật tiêu đề và nhãn giao diện dựa trên chế độ đang chọn (Đăng nhập/Đăng ký).
+     */
     private fun updateUiMode(nameInput: View, button: Button, switchText: TextView) {
         if (isLoginMode) {
             nameInput.visibility = View.GONE
-            button.text = "Login"
-            switchText.text = "Don't have an account? Register"
+            button.text = "Đăng nhập"
+            switchText.text = "Chưa có tài khoản? Đăng ký ngay"
         } else {
             nameInput.visibility = View.VISIBLE
-            button.text = "Create Account"
-            switchText.text = "Already have an account? Login"
+            button.text = "Tạo tài khoản"
+            switchText.text = "Đã có tài khoản? Đăng nhập"
         }
     }
 

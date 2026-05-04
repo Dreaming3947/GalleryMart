@@ -40,8 +40,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * Fragment Trang chủ: Hiển thị danh sách tác phẩm nghệ thuật.
- * Chịu trách nhiệm hiển thị Hero Banner, tìm kiếm và danh sách chính.
+ * Fragment Trang chủ: Hiển thị danh sách tác phẩm nghệ thuật nổi bật.
+ * Chịu trách nhiệm hiển thị Hero Banner, thanh tìm kiếm và danh sách chính dạng lưới.
  */
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
@@ -56,6 +56,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Khởi tạo ViewBinding an toàn
         val boundView = runCatching { FragmentHomeBinding.bind(view) }
             .getOrElse { return }
         _binding = boundView
@@ -67,11 +68,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     /**
-     * Cấu hình danh sách hiển thị dạng lưới (Grid 2 cột).
+     * Cấu hình RecyclerView hiển thị danh sách tác phẩm dạng lưới (Grid 2 cột).
      */
     private fun setupRecyclerView() {
         artworkAdapter = ArtworkAdapter { item ->
-            // Chuyển sang màn hình chi tiết khi nhấn vào một tác phẩm
+            // Điều hướng sang màn hình chi tiết khi nhấn vào một tác phẩm
             startActivity(Intent(requireContext(), ArtworkDetailActivity::class.java).apply {
                 putExtra(ArtworkDetailActivity.EXTRA_ID, item.id)
                 putExtra(ArtworkDetailActivity.EXTRA_TITLE, item.title)
@@ -84,6 +85,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.featuredRecycler.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = artworkAdapter
+            // Thêm khoảng cách đều giữa các mục trong Grid
             if (itemDecorationCount == 0) {
                 val spacing = resources.getDimensionPixelSize(R.dimen.gm_grid_spacing)
                 addItemDecoration(GridSpacingItemDecoration(2, spacing, includeEdge = false))
@@ -92,7 +94,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     /**
-     * Xử lý tìm kiếm tác phẩm theo tên hoặc nghệ sĩ.
+     * Xử lý tìm kiếm/lọc tác phẩm theo tên hoặc nghệ sĩ khi người dùng nhập văn bản.
      */
     private fun setupSearch() {
         binding.searchInput.addTextChangedListener { editable ->
@@ -100,17 +102,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    /**
+     * Thiết lập các sự kiện tương tác cho các nút chức năng trên màn hình chính.
+     */
     private fun setupClickListeners() {
+        // Nút chuyển sang tab Khám phá
         binding.btnExploreGallery.setOnClickListener {
             (activity as? MainActivity)?.navigateToTab(R.id.nav_explore)
         }
+        // Nút kích hoạt quyền người bán (demo logic)
         binding.btnBecomeSeller.setOnClickListener {
             enableSellerRole()
         }
-        // Load ảnh bìa từ URL bên ngoài
+        // Tải ảnh bìa nổi bật (Hero Image)
         binding.heroImage.load("https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1200&q=80")
 
-        // Cấu hình chuông thông báo
+        // Cấu hình chuông thông báo và số lượng thông báo chưa đọc
         val notificationBellContainer = view?.findViewById<FrameLayout>(R.id.notificationBellContainer)
         val notificationBadge = view?.findViewById<TextView>(R.id.notificationBadge)
         
@@ -118,6 +125,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             (activity as? MainActivity)?.navigateToNotificationCenter()
         }
 
+        // Theo dõi số lượng thông báo chưa đọc để hiển thị badge
         viewLifecycleOwner.lifecycleScope.launch {
             notificationViewModel.uiState.collect { state ->
                 if (state.unreadCount > 0) {
@@ -131,8 +139,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     /**
-     * Tự động tải lại dữ liệu mỗi khi người dùng quay lại màn hình này.
-     * Giúp cập nhật ngay lập tức các thay đổi trạng thái (ví dụ: sau khi mua tranh).
+     * Tự động làm mới dữ liệu khi người dùng quay lại màn hình Trang chủ.
      */
     override fun onResume() {
         super.onResume()
@@ -141,7 +148,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     /**
-     * Lắng nghe luồng dữ liệu (StateFlow) từ ViewModel để cập nhật giao diện.
+     * Lắng nghe các thay đổi từ ViewModel để cập nhật giao diện (Loading, Error, Data).
      */
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -157,6 +164,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    /**
+     * Logic lọc danh sách tại chỗ (Local Filter) giúp phản hồi nhanh.
+     */
     private fun applyFilter(query: String) {
         val keyword = query.trim().lowercase()
         if (keyword.isBlank()) {
@@ -169,11 +179,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         artworkAdapter.submitList(filtered)
     }
 
+    /**
+     * Gửi yêu cầu lên server để nâng cấp tài khoản lên quyền SELLER.
+     */
     private fun enableSellerRole() {
         viewLifecycleOwner.lifecycleScope.launch {
             runCatching { authRepository.enableSellerRole() }
                 .onSuccess {
-                    Toast.makeText(requireContext(), "Đã kích hoạt quyền người bán!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Chúc mừng! Bạn đã trở thành Người bán.", Toast.LENGTH_SHORT).show()
                 }
                 .onFailure { error ->
                     Toast.makeText(requireContext(), "Lỗi: ${error.message}", Toast.LENGTH_SHORT).show()
@@ -188,7 +201,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 }
 
 /**
- * Quản lý trạng thái thông báo.
+ * Trạng thái giao diện của Trung tâm thông báo.
  */
 data class NotificationCenterUiState(
     val notifications: List<NotificationResponseDto> = emptyList(),
@@ -199,6 +212,9 @@ data class NotificationCenterUiState(
     val successMessage: String? = null
 )
 
+/**
+ * ViewModel xử lý logic liên quan đến thông báo.
+ */
 class NotificationViewModel(
     private val repository: NotificationRepository = NotificationRepository()
 ) : ViewModel() {
@@ -209,6 +225,9 @@ class NotificationViewModel(
         loadNotifications()
     }
 
+    /**
+     * Lấy danh sách thông báo của người dùng hiện tại.
+     */
     fun loadNotifications() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null, successMessage = null) }
@@ -226,13 +245,16 @@ class NotificationViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = error.message ?: "Lỗi tải thông báo"
+                            errorMessage = error.message ?: "Không thể tải thông báo"
                         )
                     }
                 }
         }
     }
 
+    /**
+     * Đánh dấu tất cả thông báo là đã đọc.
+     */
     fun markAllAsRead() {
         viewModelScope.launch {
             _uiState.update { it.copy(isMarkingAllRead = true, errorMessage = null, successMessage = null) }
@@ -243,7 +265,7 @@ class NotificationViewModel(
                             isMarkingAllRead = false,
                             notifications = it.notifications.map { n -> n.copy(isRead = true) },
                             unreadCount = 0,
-                            successMessage = "Đã đánh dấu $updated thông báo là đã đọc"
+                            successMessage = "Đã đánh dấu tất cả là đã đọc"
                         )
                     }
                 }
@@ -251,7 +273,7 @@ class NotificationViewModel(
                     _uiState.update {
                         it.copy(
                             isMarkingAllRead = false,
-                            errorMessage = error.message ?: "Lỗi xử lý"
+                            errorMessage = error.message ?: "Lỗi khi xử lý"
                         )
                     }
                 }
@@ -264,7 +286,7 @@ class NotificationViewModel(
 }
 
 /**
- * Fragment hiển thị trung tâm thông báo.
+ * Fragment hiển thị danh sách chi tiết các thông báo của hệ thống.
  */
 class NotificationCenterFragment : Fragment() {
     private val viewModel: NotificationViewModel by viewModels()
@@ -275,13 +297,14 @@ class NotificationCenterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val context = requireContext()
+        // Tạo giao diện bằng code (Programmatic UI) cho phần thông báo
         val root = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(24, 24, 24, 24)
         }
 
         val backButton = Button(context).apply { text = "Quay lại" }
-        val markReadButton = Button(context).apply { text = "Đánh dấu tất cả là đã đọc" }
+        val markReadButton = Button(context).apply { text = "Đánh dấu tất cả đã đọc" }
         val unreadText = TextView(context).apply { text = "Chưa đọc: 0" }
         val loading = ProgressBar(context).apply { visibility = View.GONE }
         val error = TextView(context).apply { visibility = View.GONE }
@@ -304,6 +327,7 @@ class NotificationCenterFragment : Fragment() {
             viewModel.markAllAsRead()
         }
 
+        // Cập nhật giao diện theo luồng dữ liệu từ ViewModel
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
@@ -311,9 +335,14 @@ class NotificationCenterFragment : Fragment() {
                     loading.visibility = if (state.isLoading) View.VISIBLE else View.GONE
                     error.visibility = if (state.errorMessage.isNullOrBlank()) View.GONE else View.VISIBLE
                     error.text = state.errorMessage
+                    
                     adapter.clear()
-                    adapter.addAll(state.notifications.map { n -> "${if (n.isRead) "" else "• "}${n.title}: ${n.message}" })
+                    adapter.addAll(state.notifications.map { n -> 
+                        val prefix = if (n.isRead) "" else "● "
+                        "$prefix${n.title}\n${n.message}"
+                    })
                     adapter.notifyDataSetChanged()
+
                     state.successMessage?.let { msg ->
                         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
                         viewModel.clearMessages()

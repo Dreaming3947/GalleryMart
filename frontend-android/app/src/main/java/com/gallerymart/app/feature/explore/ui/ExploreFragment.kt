@@ -21,6 +21,10 @@ import com.gallerymart.app.feature.home.model.ArtworkUiModel
 import com.gallerymart.app.feature.home.vm.HomeViewModel
 import kotlinx.coroutines.launch
 
+/**
+ * ExploreFragment: Màn hình khám phá cho phép người dùng tìm kiếm và xem danh sách tác phẩm nghệ thuật.
+ * Giao diện bao gồm thanh tìm kiếm và danh sách hiển thị dạng lưới (Grid).
+ */
 class ExploreFragment : Fragment(R.layout.fragment_explore) {
     private var _binding: FragmentExploreBinding? = null
     private val binding get() = _binding!!
@@ -33,16 +37,31 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentExploreBinding.bind(view)
 
+        setupRecyclerView()
+        setupSearch()
+        setupClickListeners()
+        observeState()
+
+        // Tải dữ liệu ban đầu
+        viewModel.loadArtworks()
+    }
+
+    /**
+     * Cấu hình RecyclerView để hiển thị danh sách tác phẩm dạng lưới 2 cột.
+     */
+    private fun setupRecyclerView() {
         artworkAdapter = ExploreArtworkAdapter { item ->
+            // Chuyển sang màn hình chi tiết khi nhấn vào một tác phẩm
             startActivity(Intent(requireContext(), ArtworkDetailActivity::class.java).apply {
                 putExtra(ArtworkDetailActivity.EXTRA_ID, item.id)
                 putExtra(ArtworkDetailActivity.EXTRA_TITLE, item.title)
                 putExtra(ArtworkDetailActivity.EXTRA_AUTHOR, item.author)
                 putExtra(ArtworkDetailActivity.EXTRA_PRICE, item.priceText)
                 putExtra(ArtworkDetailActivity.EXTRA_IMAGE_URL, item.imageUrl)
-                putExtra(ArtworkDetailActivity.EXTRA_DESCRIPTION, "Chi tiet tac pham tu man Kham pha")
+                // Thông tin mô phỏng thêm cho phần khám phá
+                putExtra(ArtworkDetailActivity.EXTRA_DESCRIPTION, "Chi tiết tác phẩm từ màn Khám phá")
                 putExtra(ArtworkDetailActivity.EXTRA_YEAR, "1980")
-                putExtra(ArtworkDetailActivity.EXTRA_MATERIAL, "Son mai")
+                putExtra(ArtworkDetailActivity.EXTRA_MATERIAL, "Sơn mài")
                 putExtra(ArtworkDetailActivity.EXTRA_SIZE, "70x90 cm")
             })
         }
@@ -50,17 +69,27 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         binding.exploreRecycler.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = artworkAdapter
-            itemAnimator = null
+            itemAnimator = null // Tắt hiệu ứng để tăng tốc độ phản hồi khi tìm kiếm
             if (itemDecorationCount == 0) {
                 val spacing = resources.getDimensionPixelSize(R.dimen.gm_grid_spacing)
                 addItemDecoration(GridSpacingItemDecoration(2, spacing, includeEdge = false))
             }
         }
+    }
 
+    /**
+     * Xử lý bộ lọc tìm kiếm theo thời gian thực.
+     */
+    private fun setupSearch() {
         binding.exploreSearchInput.addTextChangedListener { editable ->
             applyFilter(editable?.toString().orEmpty())
         }
+    }
 
+    /**
+     * Thiết lập các sự kiện click cho các nút điều hướng và chức năng.
+     */
+    private fun setupClickListeners() {
         binding.btnMenu.setOnClickListener {
             (activity as? MainActivity)?.navigateToTab(R.id.nav_home)
         }
@@ -68,18 +97,22 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
             (activity as? MainActivity)?.navigateToTab(R.id.nav_profile)
         }
         binding.btnTune.setOnClickListener { showComingSoon() }
+    }
 
+    /**
+     * Lắng nghe trạng thái từ ViewModel để cập nhật UI.
+     */
+    private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
+                    // Hiển thị thanh tải khi đang lấy dữ liệu
                     binding.exploreLoadingFooter.visibility = if (state.isLoading) View.VISIBLE else View.GONE
                     allArtworks = state.artworks
                     applyFilter(binding.exploreSearchInput.text?.toString().orEmpty())
                 }
             }
         }
-
-        viewModel.loadArtworks()
     }
 
     override fun onDestroyView() {
@@ -87,6 +120,9 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         super.onDestroyView()
     }
 
+    /**
+     * Lọc danh sách tác phẩm theo tên hoặc tác giả.
+     */
     private fun applyFilter(query: String) {
         val keyword = query.trim().lowercase()
         if (keyword.isBlank()) {
@@ -100,6 +136,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
     }
 
     private fun showComingSoon() {
-        Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Tính năng sắp ra mắt", Toast.LENGTH_SHORT).show()
     }
 }

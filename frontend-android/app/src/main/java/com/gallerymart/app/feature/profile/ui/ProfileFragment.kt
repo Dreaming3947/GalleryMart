@@ -42,13 +42,14 @@ import java.io.File
 import java.io.FileOutputStream
 
 /**
- * ProfileFragment quản lý hồ sơ người dùng và chức năng đăng tác phẩm.
- * Giao diện đã được tối ưu hóa cho mục đích demo chuyên nghiệp.
+ * ProfileFragment quản lý hồ sơ người dùng và chức năng dành cho người bán.
+ * Giao diện sử dụng TabLayout để phân tách giữa Thông tin cá nhân và Chức năng đăng bán tác phẩm.
  */
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val viewModel: ArtworkUploadViewModel by viewModels()
     
+    // Đăng ký trình chọn ảnh từ bộ nhớ thiết bị
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -69,6 +70,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Kiểm tra xem layout có hỗ trợ TabLayout hay không (tùy thuộc vào cấu hình XML)
         val mainTab = view.findViewById<TabLayout>(R.id.profileTabLayout)
         if (mainTab != null) {
             setupTabNavigation(view)
@@ -77,6 +79,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
+    /**
+     * Thiết lập điều hướng tab: "Hồ sơ" và "Đăng tác phẩm".
+     */
     private fun setupTabNavigation(view: View) {
         tabLayout = view.findViewById(R.id.profileTabLayout)
         fragmentContainer = view.findViewById(R.id.fragmentContainer)
@@ -98,11 +103,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
+        // Mặc định hiển thị tab Hồ sơ khi mới vào
         showProfileView()
     }
 
     /**
-     * Hiển thị giao diện Hồ sơ người dùng với thiết kế Card hiện đại.
+     * Hiển thị giao diện Hồ sơ người dùng với các thông tin từ SessionManager.
      */
     private fun showProfileView() {
         fragmentContainer?.removeAllViews()
@@ -115,7 +121,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             setBackgroundColor(ContextCompat.getColor(context, R.color.gm_bg))
         }
 
-        // --- Card thông tin cá nhân ---
+        // --- Card thông tin cá nhân: Ảnh đại diện, tên, email ---
         val headerCard = MaterialCardView(context).apply {
             radius = 48f
             cardElevation = 0f
@@ -133,7 +139,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         val avatar = ImageView(context).apply {
             layoutParams = LinearLayout.LayoutParams(spToPx(context, 80), spToPx(context, 80)).apply { bottomMargin = spToPx(context, 12) }
-            // Sử dụng icon có sẵn trong project
             load(R.drawable.ic_account_circle) {
                 transformations(CircleCropTransformation())
             }
@@ -160,7 +165,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         headerContent.addView(userEmail)
         headerCard.addView(headerContent)
 
-        // --- Card thông tin hệ thống ---
+        // --- Card thông tin hệ thống: Vai trò (Buyer/Seller) ---
         val infoCard = MaterialCardView(context).apply {
             radius = 32f
             cardElevation = 0f
@@ -176,7 +181,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         infoContent.addView(createLabelValueView(context, "VAI TRÒ", SessionManager.userRoles ?: "BUYER"))
         infoCard.addView(infoContent)
 
-        // --- Nút Đăng xuất nổi bật ---
+        // --- Nút Đăng xuất ---
         val logoutButton = MaterialButton(context).apply {
             text = "ĐĂNG XUẤT"
             textSize = 14f
@@ -204,6 +209,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         fragmentContainer?.addView(rootLayout)
     }
 
+    /**
+     * Helper tạo view hiển thị cặp Nhãn - Giá trị (ví dụ: VAI TRÒ - SELLER).
+     */
     private fun createLabelValueView(context: Context, label: String, value: String): View {
         return LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -231,13 +239,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
-    /**
-     * Chuyển đổi đơn vị SP/DP sang Pixels để đảm bảo hiển thị đúng trên các mật độ màn hình khác nhau.
-     */
     private fun spToPx(context: Context, sp: Int): Int {
         return (sp * context.resources.displayMetrics.density).toInt()
     }
 
+    /**
+     * Hiển thị giao diện Đăng tác phẩm (lấy từ layout XML riêng).
+     */
     private fun showUploadView() {
         fragmentContainer?.removeAllViews()
         val uploadView = LayoutInflater.from(requireContext()).inflate(R.layout.layout_upload_artwork, fragmentContainer, false)
@@ -245,6 +253,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         setupUploadControls(uploadView)
     }
 
+    /**
+     * Thiết lập các control trong màn hình đăng tác phẩm (Chọn ảnh, Nhập thông tin, Gửi lên Server).
+     */
     private fun setupUploadControls(view: View) {
         val cardImageContainer = view.findViewById<View>(R.id.cardImageContainer)
         val imagePreview = view.findViewById<ImageView>(R.id.imagePreview)
@@ -262,6 +273,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val createProgressBar = view.findViewById<ProgressBar>(R.id.createProgressBar)
         val tvErrorMessage = view.findViewById<TextView>(R.id.tvErrorMessage)
 
+        // Danh sách danh mục tác phẩm
         val categories = arrayOf("PAINTING", "SCULPTURE", "PHOTOGRAPHY", "DIGITAL_ART", "OTHER")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -278,6 +290,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             viewModel.createArtwork()
         }
 
+        // Lắng nghe trạng thái từ ViewModel để cập nhật tiến trình và thông báo
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
                 if (state.imageFile != null) {
@@ -292,6 +305,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
                 uploadProgressBar?.visibility = if (state.isUploadingImage) View.VISIBLE else View.GONE
                 createProgressBar?.visibility = if (state.isCreatingArtwork) View.VISIBLE else View.GONE
+                // Chỉ cho phép bấm nút Tạo khi đã upload ảnh xong (có URL)
                 btnCreateArtwork?.isEnabled = !state.isCreatingArtwork && state.imageUrl != null
                 
                 uploadStatusMessage?.apply {
@@ -312,6 +326,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
+    /**
+     * Xử lý tệp tin từ URI được chọn để chuẩn bị upload.
+     */
     private fun convertUriToFile(uri: Uri) {
         try {
             val inputStream = requireContext().contentResolver.openInputStream(uri) ?: return
@@ -322,6 +339,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 }
 
+/**
+ * Lớp dữ liệu giữ trạng thái UI cho màn hình đăng tác phẩm.
+ */
 data class ArtworkUploadUiState(
     val imageFile: File? = null,
     val imageUrl: String? = null,
@@ -336,6 +356,9 @@ data class ArtworkUploadUiState(
     val successMessage: String? = null
 )
 
+/**
+ * ViewModel quản lý logic nghiệp vụ cho việc đăng tải tác phẩm.
+ */
 class ArtworkUploadViewModel(
     private val repository: ArtworkRepository = ArtworkRepository()
 ) : androidx.lifecycle.ViewModel() {
@@ -350,6 +373,9 @@ class ArtworkUploadViewModel(
     fun updatePrice(v: String) { _uiState.value = _uiState.value.copy(price = v) }
     fun updateCategory(v: String) { _uiState.value = _uiState.value.copy(category = v) }
 
+    /**
+     * Upload ảnh lên Cloudinary thông qua backend.
+     */
     fun uploadImage() {
         val selectedFile = _uiState.value.imageFile ?: return
         viewModelScope.launch {
@@ -366,6 +392,9 @@ class ArtworkUploadViewModel(
         }
     }
 
+    /**
+     * Tạo bản ghi tác phẩm mới trong hệ thống.
+     */
     fun createArtwork() {
         val state = _uiState.value
         viewModelScope.launch {

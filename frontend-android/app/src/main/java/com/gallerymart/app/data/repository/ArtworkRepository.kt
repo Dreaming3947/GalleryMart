@@ -130,19 +130,37 @@ class AuthRepository(
     private val api: AuthApi = NetworkModule.authApi
 ) {
 
+    /**
+     * Đăng ký tài khoản mới.
+     * Xử lý lỗi trùng lặp email (409) và các lỗi nhập liệu (400).
+     */
     suspend fun register(
         email: String,
         password: String,
         fullName: String,
         avatarUrl: String? = null
     ): AuthResponseDto {
-        val response = api.register(RegisterRequestDto(email, password, fullName, avatarUrl))
-        if (!response.success) throw IllegalStateException(response.message)
-        val authData = response.data ?: throw IllegalStateException("Lỗi đăng ký")
-        persistSession(authData)
-        return authData
+        try {
+            val response = api.register(RegisterRequestDto(email, password, fullName, avatarUrl))
+            if (!response.success) throw IllegalStateException(response.message ?: "Đăng ký thất bại")
+            val authData = response.data ?: throw IllegalStateException("Không nhận được dữ liệu xác thực")
+            persistSession(authData)
+            return authData
+        } catch (e: retrofit2.HttpException) {
+            val errorMsg = when (e.code()) {
+                409 -> "Email này đã được sử dụng. Vui lòng thử email khác."
+                400 -> "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại."
+                else -> "Lỗi hệ thống (${e.code()}). Vui lòng thử lại sau."
+            }
+            throw IllegalStateException(errorMsg)
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
+    /**
+     * Đăng nhập vào hệ thống bằng email và mật khẩu.
+     */
     suspend fun login(email: String, password: String): AuthResponseDto {
         val response = api.login(LoginRequestDto(email, password))
         if (!response.success) throw IllegalStateException(response.message)
@@ -162,6 +180,9 @@ class AuthRepository(
         return profile
     }
 
+    /**
+     * Lưu thông tin phiên đăng nhập vào bộ nhớ máy (SharedPrefs).
+     */
     private fun persistSession(authData: AuthResponseDto) {
         SessionManager.saveAuth(
             accessToken = authData.accessToken,
@@ -172,6 +193,9 @@ class AuthRepository(
         )
     }
 
+    /**
+     * Đăng xuất và xóa sạch dữ liệu phiên làm việc.
+     */
     fun logout() {
         SessionManager.clear()
     }
@@ -183,6 +207,9 @@ class AuthRepository(
 class OrderRepository(
     private val api: OrderApi = NetworkModule.orderApi
 ) {
+    /**
+     * Tạo đơn hàng mới cho một tác phẩm.
+     */
     suspend fun createOrder(artworkId: Long, note: String?): OrderResponseDto {
         val response = try {
             api.createOrder(OrderCreateRequestDto(artworkId, note?.trim()))
@@ -193,6 +220,9 @@ class OrderRepository(
         return response.data ?: throw IllegalStateException("Dữ liệu đơn hàng trống")
     }
 
+    /**
+     * Đánh dấu đã gửi thanh toán cho đơn hàng (đợi admin duyệt).
+     */
     suspend fun markPaymentSent(orderId: Long): OrderResponseDto {
         val response = try {
             api.markPaymentSent(orderId)
@@ -203,11 +233,17 @@ class OrderRepository(
         return response.data ?: throw IllegalStateException("Phản hồi thanh toán trống")
     }
 
+    /**
+     * Lấy danh sách đơn hàng của người dùng hiện tại (vai trò Người mua).
+     */
     suspend fun getMyOrders(): List<OrderResponseDto> {
         val response = api.getMyOrders()
         return if (response.success) response.data ?: emptyList() else emptyList()
     }
 
+    /**
+     * Hỗ trợ phân tích lỗi từ API trả về.
+     */
     private fun parseApiErrorMessage(error: HttpException, fallback: String): String {
         val raw = error.response()?.errorBody()?.string().orEmpty()
         return runCatching { JSONObject(raw).optString("message", fallback) }.getOrDefault(fallback)

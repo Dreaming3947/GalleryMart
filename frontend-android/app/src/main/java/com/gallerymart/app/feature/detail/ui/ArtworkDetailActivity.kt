@@ -28,6 +28,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+/**
+ * Hoạt động hiển thị chi tiết một tác phẩm nghệ thuật.
+ * Cho phép người dùng xem thông tin, phóng to ảnh, và đặt mua (nếu là người mua).
+ */
 class ArtworkDetailActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_ID = "extra_id"
@@ -56,6 +60,7 @@ class ArtworkDetailActivity : AppCompatActivity() {
         binding = ActivityArtworkDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Lấy ID tác phẩm từ intent truyền vào
         artworkId = extractArtworkIdFromIntent()
 
         if (artworkId != null) {
@@ -67,6 +72,9 @@ class ArtworkDetailActivity : AppCompatActivity() {
         setupListeners()
     }
 
+    /**
+     * Hiển thị dữ liệu sơ bộ từ Intent để giao diện hiện lên ngay lập tức.
+     */
     private fun setupUIWithIntentData() {
         val title = intent.getStringExtra(EXTRA_TITLE).orEmpty().ifBlank { "Tác phẩm" }
         val author = intent.getStringExtra(EXTRA_AUTHOR).orEmpty().ifBlank { "Tác giả" }
@@ -96,8 +104,11 @@ class ArtworkDetailActivity : AppCompatActivity() {
         binding.detailArtistAvatar.load("https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80")
     }
 
+    /**
+     * Thiết lập các sự kiện tương tác của người dùng.
+     */
     private fun setupListeners() {
-        // Zoom image feature
+        // Phóng to ảnh khi nhấn vào
         binding.detailImage.setOnClickListener {
             showFullScreenImage(currentImageUrl)
         }
@@ -105,7 +116,6 @@ class ArtworkDetailActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener { finish() }
 
         binding.btnViewAll.setOnClickListener {
-            // Quay lai MainActivity va chuyen sang tab Explore
             val intent = Intent(this, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                 putExtra("NAVIGATE_TO", R.id.nav_explore)
@@ -118,26 +128,19 @@ class ArtworkDetailActivity : AppCompatActivity() {
             pressBounce(it)
             showComingSoon()
         }
-        binding.btnFollowArtist.setOnClickListener {
-            pressBounce(it)
-            showComingSoon()
-        }
-        binding.btnArtistProfile.setOnClickListener {
-            pressBounce(it)
-            showComingSoon()
-        }
         
-        // Place Order button - only show for BUYER role
+        // Nút mua hàng - chỉ dành cho vai trò BUYER
         binding.btnOwnNow.setOnClickListener {
             pressBounce(it)
             val userRoles = SessionManager.userRoles ?: ""
             val currentUserId = SessionManager.userId
             
             if (artworkId == null) {
-                Toast.makeText(this, "Artwork ID not found", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Không tìm thấy ID tác phẩm", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            // Ngăn chặn tự mua tranh của chính mình
             if (currentUserId != null && artworkSellerId != null && currentUserId == artworkSellerId) {
                 Toast.makeText(this, "Bạn không thể mua chính artwork của mình", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -151,7 +154,7 @@ class ArtworkDetailActivity : AppCompatActivity() {
             if (!canCurrentUserBuy(userRoles)) {
                 Toast.makeText(this, "Chỉ tài khoản người mua mới có thể đặt hàng", Toast.LENGTH_SHORT).show()
             } else {
-                // Navigate to real Checkout Activity
+                // Chuyển sang màn hình Thanh toán
                 startActivity(
                     com.gallerymart.app.feature.order.ui.buyer.CheckoutActivity.newIntent(
                         this,
@@ -163,7 +166,7 @@ class ArtworkDetailActivity : AppCompatActivity() {
             }
         }
 
-        // Observe order status changes
+        // Lắng nghe trạng thái đặt hàng từ ViewModel
         lifecycleScope.launch {
             orderViewModel.uiState.collect { state ->
                 if (!state.orderCreatedMessage.isNullOrBlank()) {
@@ -172,13 +175,13 @@ class ArtworkDetailActivity : AppCompatActivity() {
                 if (!state.errorMessage.isNullOrBlank()) {
                     Toast.makeText(this@ArtworkDetailActivity, state.errorMessage, Toast.LENGTH_SHORT).show()
                 }
-                if (!state.paymentMarkedMessage.isNullOrBlank()) {
-                    Toast.makeText(this@ArtworkDetailActivity, state.paymentMarkedMessage, Toast.LENGTH_LONG).show()
-                }
             }
         }
     }
 
+    /**
+     * Gọi API lấy thông tin chi tiết đầy đủ của tác phẩm từ server.
+     */
     private fun fetchArtworkDetails(id: Long) {
         lifecycleScope.launch {
             try {
@@ -187,13 +190,16 @@ class ArtworkDetailActivity : AppCompatActivity() {
             } catch (_: Exception) {
                 Toast.makeText(
                     this@ArtworkDetailActivity,
-                    "Khong tai duoc chi tiet tu backend, dang giu du lieu hien tai",
+                    "Không tải được chi tiết từ backend, đang giữ dữ liệu hiện tại",
                     Toast.LENGTH_SHORT
                 ).show()
             }
         }
     }
 
+    /**
+     * Cập nhật UI sau khi đã lấy được dữ liệu chính xác từ server.
+     */
     private fun updateUiFromArtwork(artwork: ArtworkResponseDto) {
         val author = artwork.sellerName.orEmpty().ifBlank { "Unknown artist" }
         val priceText = artwork.price.stripTrailingZeros().toPlainString()
@@ -209,10 +215,10 @@ class ArtworkDetailActivity : AppCompatActivity() {
             getString(R.string.detail_default_description)
         }
         binding.detailBottomPrice.text = formatPrice(priceText)
-        binding.detailMaterialValue.text = artwork.category.orEmpty().ifBlank { "Khong ro" }
+        binding.detailMaterialValue.text = artwork.category.orEmpty().ifBlank { "Không rõ" }
         binding.detailImage.load(currentImageUrl)
 
-        // Show owner information if sold
+        // Hiển thị thông tin người sở hữu nếu đã bán
         if (artworkStatus == "SOLD" && !artwork.buyerName.isNullOrBlank()) {
             binding.ownerSection.visibility = View.VISIBLE
             binding.tvOwnerName.text = "Đã sở hữu bởi: ${artwork.buyerName}"
@@ -227,6 +233,9 @@ class ArtworkDetailActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Trích xuất ID từ Intent (hỗ trợ nhiều kiểu dữ liệu).
+     */
     private fun extractArtworkIdFromIntent(): Long? {
         val raw = intent.extras?.get(EXTRA_ID)
         return when (raw) {
@@ -240,6 +249,9 @@ class ArtworkDetailActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Kiểm tra người dùng hiện tại có quyền mua hay không.
+     */
     private fun canCurrentUserBuy(rolesRaw: String): Boolean {
         if (rolesRaw.isBlank()) return true
 
@@ -257,6 +269,9 @@ class ArtworkDetailActivity : AppCompatActivity() {
         return hasBuyerRole
     }
 
+    /**
+     * Mở Dialog hiển thị ảnh toàn màn hình.
+     */
     private fun showFullScreenImage(url: String?) {
         val dialog = android.app.Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         val dialogBinding = com.gallerymart.app.databinding.DialogFullImageBinding.inflate(layoutInflater)
@@ -264,20 +279,16 @@ class ArtworkDetailActivity : AppCompatActivity() {
 
         dialogBinding.fullImageView.load(url)
         
-        // CHI NHAN VAO VUNG DEN MOI THOAT
         dialogBinding.fullImageRoot.setOnClickListener {
             dialog.dismiss()
-        }
-        
-        // NHAN VAO ANH THI KHONG THOAT
-        dialogBinding.fullImageView.setOnClickListener {
-            // Co the them logic Double Tap Zoom o day
-            // Toast.makeText(this, "Zoom feature enabled", Toast.LENGTH_SHORT).show()
         }
 
         dialog.show()
     }
 
+    /**
+     * Hiển thị danh sách gợi ý (Mock data cho demo).
+     */
     private fun setupRecommendations() {
         val titles = listOf("Góc Phố Vắng", "Chiều Đông", "Nắng Thủy Tinh", "Mùa Thu Cho Em", "Hạ Trắng")
         val prices = listOf("18.000.000 đ", "22.500.000 đ", "15.500.000 đ", "30.000.000 đ", "12.000.000 đ")
@@ -290,34 +301,13 @@ class ArtworkDetailActivity : AppCompatActivity() {
 
         val shuffled = titles.indices.shuffled()
         
-        // Item 1
         binding.recommendTitle1.text = titles[shuffled[0]]
         binding.recommendPrice1.text = prices[shuffled[0]]
-        val img1 = imageUrls.random()
-        binding.recommendImage1.load(img1)
-        binding.recommendItem1.setOnClickListener {
-            navigateToDetail(titles[shuffled[0]], img1, prices[shuffled[0]])
-        }
+        binding.recommendImage1.load(imageUrls.random())
 
-        // Item 2
         binding.recommendTitle2.text = titles[shuffled[1]]
         binding.recommendPrice2.text = prices[shuffled[1]]
-        val img2 = imageUrls.random()
-        binding.recommendImage2.load(img2)
-        binding.recommendItem2.setOnClickListener {
-            navigateToDetail(titles[shuffled[1]], img2, prices[shuffled[1]])
-        }
-    }
-
-    private fun navigateToDetail(title: String, url: String, price: String) {
-        val intent = Intent(this, ArtworkDetailActivity::class.java).apply {
-            putExtra(EXTRA_TITLE, title)
-            putExtra(EXTRA_IMAGE_URL, url)
-            putExtra(EXTRA_PRICE, price)
-            putExtra(EXTRA_AUTHOR, "Nghệ sĩ ngẫu nhiên")
-        }
-        startActivity(intent)
-        // Co the finish() neu muon quay lai trang truoc do
+        binding.recommendImage2.load(imageUrls.random())
     }
 
     private fun formatPrice(rawPrice: String): String {
@@ -335,56 +325,11 @@ class ArtworkDetailActivity : AppCompatActivity() {
             view.animate().scaleX(1f).scaleY(1f).setDuration(120).start()
         }.start()
     }
-
-    /**
-     * Show order placement dialog for buyer to place order.
-     *
-     * Dialog allows:
-     * - Display artwork title and price
-     * - Enter optional note
-     * - Confirm to place order
-     */
-    private fun showPlaceOrderDialog() {
-        if (artworkId == null) return
-
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(48, 24, 48, 8)
-        }
-        val titleView = TextView(this).apply { text = currentArtworkTitle }
-        val priceView = TextView(this).apply { text = currentArtworkPrice }
-        val noteInput = EditText(this).apply { hint = "Optional note" }
-        root.addView(titleView)
-        root.addView(priceView)
-        root.addView(noteInput)
-
-        // Initialize ViewModel with artwork data
-        orderViewModel.initOrderForm(artworkId!!, currentArtworkTitle, currentArtworkPrice)
-
-        val dialog = AlertDialog.Builder(this)
-            .setTitle("Place order")
-            .setView(root)
-            .setNegativeButton("Cancel") { d, _ -> d.dismiss() }
-            .setPositiveButton("Place", null)
-            .create()
-
-        dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                val note = noteInput.text.toString()
-                if (note.length > 1000) {
-                    Toast.makeText(this, "Note toi da 1000 ky tu", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-                orderViewModel.updateNote(note)
-                orderViewModel.placeOrder()
-                dialog.dismiss()
-            }
-        }
-
-        dialog.show()
-    }
 }
 
+/**
+ * ViewModel quản lý logic đặt hàng tại chỗ (Nếu không dùng CheckoutActivity).
+ */
 data class OrderUiState(
     val artworkId: Long? = null,
     val note: String = "",
@@ -413,10 +358,6 @@ class OrderViewModel(
         }
     }
 
-    fun updateNote(note: String) {
-        _uiState.update { it.copy(note = note) }
-    }
-
     fun placeOrder() {
         val selectedArtworkId = _uiState.value.artworkId ?: return
         viewModelScope.launch {
@@ -427,27 +368,13 @@ class OrderViewModel(
                         it.copy(
                             isPlacingOrder = false,
                             order = order,
-                            orderCreatedMessage = "Order placed successfully"
+                            orderCreatedMessage = "Đơn hàng đã được tạo thành công"
                         )
                     }
                 }
                 .onFailure { error ->
-                    _uiState.update { it.copy(isPlacingOrder = false, errorMessage = error.message ?: "Place order failed") }
+                    _uiState.update { it.copy(isPlacingOrder = false, errorMessage = error.message ?: "Đặt hàng thất bại") }
                 }
         }
     }
-
-    fun markPaymentSent() {
-        val orderId = _uiState.value.order?.id ?: return
-        viewModelScope.launch {
-            runCatching { repository.markPaymentSent(orderId) }
-                .onSuccess { order -> _uiState.update { it.copy(order = order, paymentMarkedMessage = "Payment marked as sent") } }
-                .onFailure { error -> _uiState.update { it.copy(errorMessage = error.message ?: "Failed to update payment") } }
-        }
-    }
-
-    fun clearMessages() {
-        _uiState.update { it.copy(errorMessage = null, orderCreatedMessage = null, paymentMarkedMessage = null) }
-    }
 }
-
