@@ -1,3 +1,8 @@
+/**
+ * Tệp này định nghĩa các giao diện (Interfaces) API để tương tác với backend về Tác phẩm (Artwork),
+ * Xác thực (Auth) và Thông báo (Notification).
+ * Đây là nơi AI và Retrofit tìm thấy các endpoint (đường dẫn URL) để gửi/nhận dữ liệu.
+ */
 package com.gallerymart.app.data.remote.api
 
 import com.gallerymart.app.data.remote.dto.ApiResponseDto

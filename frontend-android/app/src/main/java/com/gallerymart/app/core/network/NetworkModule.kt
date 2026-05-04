@@ -1,3 +1,10 @@
+/**
+ * Tệp này chứa cấu hình hệ thống mạng của ứng dụng (Network & Session).
+ * - NetworkModule: Khởi tạo Retrofit và các API Service để gọi lên server.
+ * - SessionManager: Quản lý đăng nhập, lưu trữ Token và thông tin người dùng vào bộ nhớ máy.
+ * - AuthInterceptor: Tự động đính kèm Token vào các yêu cầu gửi lên server để xác thực.
+ * Đây là "trái tim" của việc giao tiếp dữ liệu và bảo mật.
+ */
 package com.gallerymart.app.core.network
 
 import android.content.Context

@@ -1,3 +1,8 @@
+/**
+ * Tệp này định nghĩa giao diện (Interface) để kết nối với các API liên quan đến Đơn hàng (Orders).
+ * Các chức năng bao gồm: Tạo đơn hàng, xác nhận thanh toán, hủy đơn và lấy lịch sử mua hàng.
+ * AI sử dụng tệp này để biết cấu trúc URL và phương thức gửi dữ liệu lên server.
+ */
 package com.gallerymart.app.data.remote.api
 
 import com.gallerymart.app.data.remote.dto.ApiResponseDto

@@ -1,3 +1,8 @@
+/**
+ * Tệp này chứa các lớp Repository chính của ứng dụng: ArtworkRepository, AuthRepository, OrderRepository và NotificationRepository.
+ * Vai trò: Là lớp trung gian xử lý logic dữ liệu. Nó lấy dữ liệu từ API, chuẩn hóa (ví dụ: xử lý URL ảnh) 
+ * và cung cấp dữ liệu sạch cho Giao diện (Activity/Fragment).
+ */
 package com.gallerymart.app.data.repository
 
 import com.gallerymart.app.BuildConfig

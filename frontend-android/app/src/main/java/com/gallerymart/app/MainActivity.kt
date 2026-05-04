@@ -1,3 +1,9 @@
+/**
+ * Tệp này định nghĩa các Activities chính của ứng dụng:
+ * 1. MainActivity: Màn hình chính sau khi đăng nhập, quản lý việc chuyển đổi giữa các Tab (Trang chủ, Khám phá, Cá nhân).
+ * 2. AuthActivity: Màn hình xử lý Đăng nhập và Đăng ký người dùng. Giao diện được xây dựng bằng code (View Code).
+ * Đây là điểm khởi đầu (Entry Point) của ứng dụng Android.
+ */
 package com.gallerymart.app
 
 import android.content.Intent
